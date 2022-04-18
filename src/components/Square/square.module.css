@@ -1,0 +1,31 @@
+.square {
+  width: 10vmin;
+  height: 10vmin;
+  position: relative;
+}
+
+.white {
+  background-color: bisque;
+}
+
+.black {
+  background-color: coral;
+}
+
+.highlight {
+
+}
+
+.highlight::before {
+  content: "";
+  display: block;
+  width: 25%;
+  height: 25%;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.1);
+  position: absolute;
+  left: 50%;
+  margin-left: -12.5%;
+  top: 50%;
+  margin-top: -12.5%;
+}
