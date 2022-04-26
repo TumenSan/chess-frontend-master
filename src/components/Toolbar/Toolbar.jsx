@@ -2,48 +2,58 @@ import { useState } from "react";
 import { Modal } from "../Modal";
 import { SignUp } from "../SignUp";
 import { Login } from "../Login";
+import { UserInfo } from "../UserInfo/UserInfo";
 import styles from "./toolbar.module.css";
 
 export const Toolbar = () => {
   const [showSignUp, setShowSignUp] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
 
-  const [showToolbar, setShowToolbar] = useState(true);
+  const [showAuthButton, setShowAuthButton] = useState(true);
+  //const [showLoginButton, setShowLoginButton] = useState(true);
 
-  function UserInfoFunction(){
-    const [userInfo, setUserInfo] = useState("");
+  const [userInfo, setUserInfo] = useState("");
 
-    return <h1>User: {userInfo}</h1> 
-  }
 
   return (
-    showToolbar && (
     <div className={styles.toolbar}>
-      <UserInfoFunction/>
-      <button
-        type="button"
-        className={`${styles.button} ${styles.signUp}`}
-        onClick={() => setShowSignUp(true)}
-      >
-        Регистрация
-      </button>
-      <button
-        type="button"
-        className={`${styles.button} ${styles.login}`}
-        onClick={() => setShowLogin(true)}
-      >
-        Войти
-      </button>
+      <UserInfo userInfo={userInfo}/>
+      {showAuthButton && (
+      <div>
+        <button
+          type="button"
+          className={`${styles.button} ${styles.signUp}`}
+          onClick={() => setShowSignUp(true)}
+        >
+          Регистрация
+        </button>
+        <button
+          type="button"
+          className={`${styles.button} ${styles.login}`}
+          onClick={() => setShowLogin(true)}
+        >
+          Войти
+        </button>
+      </div>
+      )}
       {showSignUp && (
         <Modal onClose={setShowSignUp}>
-          <SignUp />
+          <SignUp 
+          onClose={setShowSignUp} 
+          onSetUserInfo={setUserInfo}
+          onsetShowAuthButton={setShowAuthButton}
+          />
         </Modal>
       )}
       {showLogin && (
         <Modal onClose={setShowLogin}>
-          <Login />
+          <Login 
+          onClose={setShowLogin} 
+          onSetUserInfo={setUserInfo} 
+          onsetShowAuthButton={setShowAuthButton}
+          />
         </Modal>
       )}
-    </div>)
+    </div>
   );
 };

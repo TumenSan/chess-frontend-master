@@ -1,7 +1,8 @@
 import styles from "./signUp.module.css";
 import { SignUpFieldsEnum } from './constants';
 
-export const SignUp = () => {
+export const SignUp = ({onClose, onSetUserInfo, onsetShowAuthButton}) => {
+
   const onSubmit = async (event) => {
     event.preventDefault();
 
@@ -59,6 +60,13 @@ export const SignUp = () => {
             //document.cookie = `Bearer=${user.token}`
 
             console.log('ok signup');
+
+
+            sessionStorage.setItem( 'userInfo', formParams.login );
+            onSetUserInfo(formParams.login);
+
+            onClose(false);
+            onsetShowAuthButton(false);
         }
         // если запрос прошел неправильно
         else {

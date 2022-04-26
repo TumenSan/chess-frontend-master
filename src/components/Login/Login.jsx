@@ -1,9 +1,10 @@
 import styles from "./login.module.css";
-import {store} from "../../ReduxStates";
 import { LoginFieldsEnum } from './constants';
 
-export const Login = () => {
+export const Login = ({onClose, onSetUserInfo, onsetShowAuthButton}) => {
+  
   const onSubmit = async (event) => {
+    //onClose(false); //
     event.preventDefault();
 
     console.log('sign in');
@@ -50,9 +51,15 @@ export const Login = () => {
             document.cookie = "Bearer=" + user.token + ";max-age=3600";
 
             //document.cookie = `Bearer=${user.token}`
-            store.dispatch({ type: 'SIGNUP' });
 
             console.log('ok signin');
+
+
+            sessionStorage.setItem( 'userInfo', formParams.login );
+            onSetUserInfo(formParams.login);
+
+            onClose(false);
+            onsetShowAuthButton(false);
         }
         // если запрос прошел неправильно
         else {
