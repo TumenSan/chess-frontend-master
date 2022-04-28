@@ -8,6 +8,8 @@ export const UserInfo = ({userInfo}) => {
     let userInfo2 = sessionStorage.getItem( 'userInfo' );
 
     //const [userInfo, setUserInfo] = useState("");
+
+    //const CountStateContext = React.createContext()
     
     return(
         <div>

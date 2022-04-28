@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Modal } from "../Modal";
 import { SignUp } from "../SignUp";
 import { Login } from "../Login";
-import { UserInfo } from "../UserInfo/UserInfo";
+import { UserInfo, ThemeContext } from "../UserInfo/UserInfo";
 import styles from "./toolbar.module.css";
 
 export const Toolbar = () => {
@@ -14,6 +14,8 @@ export const Toolbar = () => {
 
   const [userInfo, setUserInfo] = useState("");
 
+  //<ThemeContext.Provider value={"Day"}>
+  //{</ThemeContext.Provider>}
 
   return (
     <div className={styles.toolbar}>
