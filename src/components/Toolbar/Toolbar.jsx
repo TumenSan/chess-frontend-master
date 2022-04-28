@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Modal } from "../Modal";
 import { SignUp } from "../SignUp";
 import { Login } from "../Login";
-import { UserInfo, ThemeContext } from "../UserInfo/UserInfo";
+//import { UserInfo, ThemeContext } from "../UserInfo/UserInfo";
+import { UserInfo } from "../UserInfo/UserInfo";
 import styles from "./toolbar.module.css";
 
 export const Toolbar = () => {
