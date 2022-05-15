@@ -1,5 +1,6 @@
 import { Board } from "./components/Board";
 import { Toolbar } from "./components/Toolbar";
+import { ToolbarGame } from "./components/ToolbarGame";
 import "./App.css";
 
 const App = () => {
@@ -9,6 +10,7 @@ const App = () => {
       <div className="boardWrapper">
         <Board />
       </div>
+      <ToolbarGame/>
     </div>
   );
 };
