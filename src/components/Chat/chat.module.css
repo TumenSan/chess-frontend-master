@@ -1,0 +1,98 @@
+.chatWrapper {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px;
+  height: 100%;
+  background-color: rgba(35, 35, 35);
+  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  display: flex;
+    flex-direction: column;
+}
+
+.chatMessages {
+  position: relative;
+  margin: 0 5px;
+  flex: 1 1 0;
+  overflow-y: auto;
+}
+
+.chatMessage {
+  color: whitesmoke;
+  position: relative;
+  background-color: #424242;
+  border-radius: 4px;
+  padding: 5px;
+  margin-bottom: 4px;
+  line-height: 14px;
+}
+
+.youTitle {
+  margin-left: 3px;
+  opacity: 0.3;
+}
+
+.myChatMessage {
+  text-align: right;
+  background-color: rgba(47, 79, 79, 0.471);
+}
+
+.chatHeader {
+  position: relative;
+  font-size: 18px;
+  color: whitesmoke;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 30px;
+  margin: 0 5px;
+}
+
+.chatCloseButton {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  opacity: 0.3;
+}
+.chatCloseButton:hover {
+  opacity: 0.7;
+}
+.chatCloseButton:before,
+.chatCloseButton:after {
+  position: absolute;
+  left: 8px;
+  content: " ";
+  height: 16px;
+  width: 2px;
+  background-color: rgb(255, 255, 255);
+}
+.chatCloseButton:before {
+  transform: rotate(45deg);
+}
+.chatCloseButton:after {
+  transform: rotate(-45deg);
+}
+
+.chatInput {
+  display: flex;
+  margin: 5px;
+  align-items: flex-end;
+}
+.chatInput input {
+  width: 100%;
+  font-size: 16px;
+  transition: 0.6s;
+  margin-bottom: 4px;
+  border: none;
+  background-color: #424242;
+  color: white;
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 14px;
+  transition: 0.5s;
+}
+
+.chatInput input:focus {
+  outline: none;
+  border-bottom: 1px solid #2ea44f;
+}

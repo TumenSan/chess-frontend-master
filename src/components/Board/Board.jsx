@@ -1,6 +1,10 @@
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { SocketEventsEnum } from "../../connection/constants";
+import { SocketContext } from "../../contexts/socketContext";
 import { Square } from "../Square";
 import { Figure } from "../Figure";
 import { CapturedPieces } from "../CapturedPieces";
+import { ActionPanel } from "../ActionPanel";
 import {
   Pawn,
   King,
@@ -12,7 +16,6 @@ import {
   getRowColDiff,
 } from "../figures";
 import styles from "./board.module.css";
-import { useState } from "react";
 
 const calcBackgroundColor = (i, j) => {
   if ((i % 2 && j % 2) || (!(i % 2) && !(j % 2))) {
@@ -71,7 +74,29 @@ const initializeBoard = () => {
   return squares;
 };
 
-const generateBoard = (figures, handleClick) => {
+const calculateRowNumber = (currentPlayer, currentRow, currentCol) => {
+  if (
+    (currentCol !== 0 && currentPlayer !== "b") ||
+    (currentCol !== 7 && currentPlayer === "b")
+  ) {
+    return null;
+  }
+
+  return 8 - currentRow;
+};
+
+const calculateColNumber = (currentPlayer, currentRow, currentCol) => {
+  if (
+    (currentRow !== 7 && currentPlayer !== "b") ||
+    (currentRow !== 0 && currentPlayer === "b")
+  ) {
+    return null;
+  }
+
+  return (currentCol + 10).toString(36);
+};
+
+const generateBoard = (figures, handleClick, currentPlayer) => {
   const board = [];
   for (let i = 0; i < 8; i++) {
     const squareRows = [];
@@ -82,9 +107,12 @@ const generateBoard = (figures, handleClick) => {
           color={calcBackgroundColor(i, j)}
           highlight={figure.highlight}
           handleClick={() => handleClick(i * 8 + j)}
+          rowCount={calculateRowNumber(currentPlayer, i, j)}
+          colCount={calculateColNumber(currentPlayer, i, j)}
+          isRevert={currentPlayer === "b"}
         >
-          <span style={{ fontSize: "2rem" }}>{i * 8 + j}</span>
-          <Figure figure={figure} />
+          {/* <span style={{ fontSize: "2rem" }}>{i * 8 + j}</span> */}
+          <Figure figure={figure} currentPlayer={currentPlayer} />
         </Square>
       );
     }
@@ -121,8 +149,20 @@ const isBlocked = (start, end, figures) => {
   return false;
 };
 
+//зачем? наверное как то прикрутить взятие на проходе, превращение
 const isGoodPawn = (start, end, figures, passantPos) => {
-  return true;
+  //column check
+  if(Math.abs((start - end) % 8) === 0)
+    return true;
+  //common take check
+  const skipDisabled = ["b", "q", "r", "p", "k", "n"];
+  if(skipDisabled.includes(figures[end].ascii?.toLowerCase()))
+    return true;
+  //taking on pass check?...
+  //if(((23 < start < 32) && (skipDisabled.includes(figures[end].ascii?.toLowerCase()))) || 
+  //  ((31 < start < 40) && (skipDisabled.includes(figures[end].ascii?.toLowerCase()))))
+  //  return true;
+  else return false;
 };
 
 const castlingAllowed = (start, end, figures) => {
@@ -148,6 +188,7 @@ const castlingAllowed = (start, end, figures) => {
 };
 
 const invalidMove = (start, end, figures, passantPos) => {
+  //а n knight конь из-за прыжков так?
   const skipDisabled = ["b", "q", "r", "p", "k"];
   const currentFigure = figures[start].ascii?.toLowerCase();
   if (skipDisabled.includes(currentFigure) && isBlocked(start, end, figures)) {
@@ -159,7 +200,7 @@ const invalidMove = (start, end, figures, passantPos) => {
   if (
     currentFigure === "k" &&
     Math.abs(end - start) === 2 &&
-    !castlingAllowed(start, end, figures)
+    castlingAllowed(start, end, figures)
   ) {
     return true;
   }
@@ -240,40 +281,95 @@ const resetHighlight = (figures) => {
   return figures;
 };
 
+function fmtMSS(s, min = 1000, max = 9999) {
+  const isAdmin = localStorage.getItem("isAdmin");
+  let rand = Math.floor(min + Math.random() * (max + 1 - min));
+  return `${isAdmin ? `Игрок #${rand} | ` : ""}${(s - (s %= 60)) / 60 + (9 < s ? ":" : ":0") + s}`;
+}
+
 export const Board = () => {
   const [figures, setFigures] = useState(() => initializeBoard());
   const [activePlayer, setActivePlayer] = useState("w");
   const [source, setSource] = useState(-1);
   const [capturedByWhite, setCapturedByWhite] = useState({});
   const [capturedByBlack, setCapturedByBlack] = useState({});
+  const socketData = useContext(SocketContext);
+  const [currentPlayer, setCurrentPlayer] = useState("w");
+  const [history, setHistory] = useState([]);
+  const blackTimeoutPause = useRef(true);
+  const whiteTimeoutPause = useRef(true);
+  const [blackTime, setBlackTime] = useState(5 * 60);
+  const [whiteTime, setWhiteTime] = useState(5 * 60);
 
-  const executeMove = (start, end) => {
-    const newFigures = [...figures];
-    resetHighlight(newFigures);
-    // TODO: king highlight
-    if (
-      newFigures[start].ascii.toLowerCase() === "k" ||
-      newFigures[start].ascii.toLowerCase() === "r"
-    ) {
-      newFigures[start].isMoved = true;
-    }
-    if (newFigures[end].ascii && newFigures[end].player !== activePlayer) {
-      const updateFunction =
-        activePlayer === "w" ? setCapturedByWhite : setCapturedByBlack;
-      const asciiCode = newFigures[end].ascii.toUpperCase();
-      updateFunction((prev) => ({
-        ...prev,
-        [asciiCode]: (prev[asciiCode] ?? 0) + 1,
-      }));
-    }
-    newFigures[end] = newFigures[start];
-    newFigures[start] = new Empty(null);
-    setFigures(newFigures);
-    setSource(-1);
-    setActivePlayer((prev) => (prev === "w" ? "b" : "w"));
-  };
+  useEffect(() => {
+    const timeoutId = setInterval(() => {
+      if (!blackTimeoutPause.current) {
+        setBlackTime((t) => t - 1);
+      }
+    }, 1000);
+
+    return () => {
+      clearInterval(timeoutId);
+    };
+  }, []);
+
+  useEffect(() => {
+    const timeoutId = setInterval(() => {
+      if (!whiteTimeoutPause.current) {
+        setWhiteTime((t) => t - 1);
+      }
+    }, 1000);
+
+    return () => {
+      clearInterval(timeoutId);
+    };
+  }, []);
+
+  const executeMove = useCallback(
+    (start, end) => {
+      const newFigures = [...figures];
+      resetHighlight(newFigures);
+      const historyRecord = {
+        figure: figures[start].ascii,
+        start,
+        end,
+        captured: null,
+      };
+      // TODO: king highlight
+      if (
+        newFigures[start].ascii.toLowerCase() === "k" ||
+        newFigures[start].ascii.toLowerCase() === "r"
+      ) {
+        newFigures[start].isMoved = true;
+      }
+      if (newFigures[end].ascii && newFigures[end].player !== activePlayer) {
+        const updateFunction =
+          activePlayer === "w" ? setCapturedByWhite : setCapturedByBlack;
+
+        historyRecord.captured = newFigures[end].ascii;
+
+        const asciiCode = newFigures[end].ascii.toUpperCase();
+        updateFunction((prev) => ({
+          ...prev,
+          [asciiCode]: (prev[asciiCode] ?? 0) + 1,
+        }));
+      }
+      newFigures[end] = newFigures[start];
+      newFigures[start] = new Empty(null);
+      setFigures(newFigures);
+      setSource(-1);
+      setHistory((h) => [...h, historyRecord]);
+      setActivePlayer((prev) => {
+        return prev === "w" ? "b" : "w";
+      });
+    },
+    [activePlayer, figures]
+  );
 
   const handleClick = (index) => {
+    if (currentPlayer !== activePlayer) {
+      return;
+    }
     const newFigures = [...figures];
     if (source === -1) {
       if (figures[index].player !== activePlayer) {
@@ -316,17 +412,71 @@ export const Board = () => {
         return;
       }
 
+      if(!checkCanMove(source, index, newFigures)){
+        return;
+      }
+      
+      whiteTimeoutPause.current = activePlayer === "w";
+      blackTimeoutPause.current = activePlayer === "b";
       executeMove(source, index);
+      socketData.send({
+        type: SocketEventsEnum.MOVE,
+        start: source,
+        end: index,
+      });
     }
   };
 
-  const board = generateBoard(figures, handleClick);
+  useEffect(() => {
+    const processMes = (result) => {
+      switch (result.type) {
+        case SocketEventsEnum.START_GAME:
+          whiteTimeoutPause.current = false;
+          setCurrentPlayer(result.side);
+          break;
+        case SocketEventsEnum.MOVE:
+          whiteTimeoutPause.current = !whiteTimeoutPause.current;
+          blackTimeoutPause.current = !blackTimeoutPause.current;
+          executeMove(result.start, result.end);
+          // setActivePlayer(result.player);
+          break;
+        default:
+          console.log("Unknown");
+      }
+    };
+
+    socketData.subscribe(processMes);
+
+    return () => {
+      socketData.unsubscribe(processMes);
+    };
+  }, [socketData, executeMove]);
+
+  const board = generateBoard(figures, handleClick, currentPlayer);
 
   return (
-    <div className="board">
-      <CapturedPieces capturedPieces={capturedByBlack} player="w" />
-      {board}
-      <CapturedPieces capturedPieces={capturedByWhite} player="b" />
-    </div>
+    <>
+      <div className={styles.boardWrapper}>
+        {currentPlayer === "b" ? fmtMSS(whiteTime) : fmtMSS(blackTime)}
+        <div className={`${currentPlayer === "b" ? styles.blackSide : ""}`}>
+          <CapturedPieces
+            invert={currentPlayer === "b"}
+            capturedPieces={capturedByBlack}
+            player="w"
+          />
+          {board}
+          <CapturedPieces
+            invert={currentPlayer === "b"}
+            capturedPieces={capturedByWhite}
+            player="b"
+          />
+        </div>
+        {currentPlayer === "b" ? fmtMSS(blackTime) : fmtMSS(whiteTime)}
+      </div>
+      <ActionPanel
+        text={`Ходят ${activePlayer === "b" ? "черные" : "белые"}`}
+        history={history}
+      />
+    </>
   );
 };

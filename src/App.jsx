@@ -1,16 +1,17 @@
+import { useState } from "react";
 import { Board } from "./components/Board";
 import { Toolbar } from "./components/Toolbar";
-import { ToolbarGame } from "./components/ToolbarGame";
+import { Chat } from "./components/Chat";
 import "./App.css";
 
 const App = () => {
+  const [showChat, setShowChat] = useState(false);
+
   return (
     <div className="app">
-      <Toolbar />
-      <div className="boardWrapper">
-        <Board />
-      </div>
-      <ToolbarGame/>
+      <Toolbar setShowChat={setShowChat} />
+      <Board />
+      <Chat visible={showChat} close={() => setShowChat(false)} />
     </div>
   );
 };

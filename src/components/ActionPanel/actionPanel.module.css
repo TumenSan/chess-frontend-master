@@ -1,20 +1,37 @@
-.toolbar {
-  width: 160px;
+.actionPanel {
+  width: 200px;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  flex: 0 0 160px;
+  flex: 1 0 200px;
   display: flex;
   justify-content: center;
-  align-items: center;
   flex-direction: column;
   padding: 15px;
   box-sizing: border-box;
 }
 
-.loginName {
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 28px;
+.history {
+  margin-top: 15px;
+  width: 100%;
+  height: 200px;
+  overflow-y: auto;
+}
+
+.historyItem {
+  display: flex;
+}
+
+.player {
+  transform: scale(1.4);
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.buttons {
+  margin-top: 15px;
 }
 
 .button {
@@ -38,44 +55,46 @@
   margin-bottom: 6px;
 }
 
-.signUp {
-  background-color: #2ea44f;
+.warn {
+  background-color: #d48d3c;
   border: 1px solid rgba(27, 31, 35, 0.15);
   box-shadow: rgba(27, 31, 35, 0.1) 0 1px 0;
   color: whitesmoke;
 }
 
-.signUp:focus:not(:focus-visible):not(.focus-visible) {
+.warn:focus:not(:focus-visible):not(.focus-visible) {
   box-shadow: none;
   outline: none;
 }
 
-.signUp:hover {
-  background-color: #2c974b;
+.warn:hover {
+  background-color: #be7f37;
 }
 
-.signUp:focus {
-  box-shadow: rgba(46, 164, 79, 0.4) 0 0 0 3px;
+.warn:focus {
+  box-shadow: #be7f37 0 0 0 3px;
   outline: none;
 }
 
-.signUp:active {
-  background-color: #298e46;
+.warn:active {
+  background-color: #be7f37;
   box-shadow: rgba(20, 70, 32, 0.2) 0 1px 0 inset;
 }
 
-.login {
-  background-color: rgb(51, 51, 51);
+.ban {
+  background-color: #8e3029;
   color: whitesmoke;
   border-width: 0;
 }
 
-.login:focus:not(:focus-visible):not(.focus-visible) {
+.ban:focus:not(:focus-visible):not(.focus-visible) {
   box-shadow: none;
   outline: none;
 }
 
-.login:hover, .login:focus, .login:active {
-  background-color: rgba(194, 194, 194, 0.2);
+.ban:hover,
+.login:focus,
+.login:active {
+  background-color: #772823;
   outline: none;
 }

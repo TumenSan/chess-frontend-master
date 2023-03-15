@@ -209,3 +209,7 @@
 .capturedPieceW1Q {
   background-position: -505px -418px;
 }
+
+.invert {
+  transform: rotateX(180deg);
+}

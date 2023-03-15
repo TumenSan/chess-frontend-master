@@ -1,0 +1,85 @@
+.report {
+  width: 300px;
+  margin: 20px;
+  background-color: #2b2b2b;
+  padding: 20px;
+  color: whitesmoke;
+}
+
+.report h3 {
+  color: whitesmoke;
+}
+
+.report input {
+  width: 100%;
+  height: 40px;
+  font-size: 16px;
+  transition: 0.6s;
+  margin-bottom: 20px;
+  border: none;
+  background-color: #424242;
+  color: white;
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 14px;
+  transition: 0.5s;
+}
+
+.report input:focus {
+  outline: none;
+  border-bottom: 1px solid #2ea44f;
+}
+
+.report input[type="submit"]:hover {
+  background-color: #2ea44f;
+}
+
+.report [type="radio"]:checked,
+.report [type="radio"]:not(:checked) {
+  position: absolute;
+  left: -9999px;
+}
+.report [type="radio"]:checked + label,
+.report [type="radio"]:not(:checked) + label {
+  position: relative;
+  padding-left: 28px;
+  cursor: pointer;
+  line-height: 20px;
+  display: inline-block;
+  color: #666;
+}
+.report [type="radio"]:checked + label:before,
+.report [type="radio"]:not(:checked) + label:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 18px;
+  height: 18px;
+  border: 1px solid #ddd;
+  border-radius: 100%;
+  background: #fff;
+}
+.report [type="radio"]:checked + label:after,
+.report [type="radio"]:not(:checked) + label:after {
+  content: "";
+  width: 12px;
+  height: 12px;
+  background: #2ea44f;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  border-radius: 100%;
+  -webkit-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+}
+.report [type="radio"]:not(:checked) + label:after {
+  opacity: 0;
+  -webkit-transform: scale(0);
+  transform: scale(0);
+}
+.report [type="radio"]:checked + label:after {
+  opacity: 1;
+  -webkit-transform: scale(1);
+  transform: scale(1);
+}

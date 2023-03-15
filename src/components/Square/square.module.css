@@ -12,9 +12,7 @@
   background-color: coral;
 }
 
-.highlight {
-
-}
+.highlight {}
 
 .highlight::before {
   content: "";
@@ -28,4 +26,41 @@
   margin-left: -12.5%;
   top: 50%;
   margin-top: -12.5%;
+}
+
+.squareRowCount {
+  position: absolute;
+  left: 2px;
+  font-size: 1em;
+}
+
+.squareRowCount.revert {
+  right: 2px;
+  bottom: 2px;
+}
+
+.white .squareRowCount {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.squareColCount {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  font-size: 1em;
+}
+
+.squareColCount.revert {
+  left: 2px;
+  top: 2px;
+  right: auto;
+  bottom: auto;
+}
+
+.white .squareColCount {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.revert {
+  transform: rotateX(180deg) rotateY(180deg);
 }

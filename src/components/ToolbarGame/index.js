@@ -1,1 +1,0 @@
-export { ToolbarGame } from './ToolbarGame';

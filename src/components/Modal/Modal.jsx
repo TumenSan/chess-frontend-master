@@ -35,7 +35,7 @@ export const Modal = ({ onClose, children }) => {
     <div
       ref={modalWrapperRef}
       className={styles.modalWrapper}
-      onClick={handleClose}
+      onMouseDown={handleClose}
     >
       {children}
     </div>

@@ -1,60 +1,149 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Modal } from "../Modal";
 import { SignUp } from "../SignUp";
 import { Login } from "../Login";
-//import { UserInfo, ThemeContext } from "../UserInfo/UserInfo";
-import { UserInfo } from "../UserInfo/UserInfo";
+import { Report } from "../Report";
 import styles from "./toolbar.module.css";
+import { useUser } from "../../contexts/userContext";
+import { SocketContext } from "../../contexts/socketContext";
+import { LOGOUT_USER_ACTION } from "../../actions/userActions";
 
-export const Toolbar = () => {
+export const Toolbar = ({ setShowChat }) => {
   const [showSignUp, setShowSignUp] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
+  const [showReport, setShowReport] = useState(false);
+  const [GameStatus, isGame] = useState(false);
+  const [{ user }, dispatch] = useUser();
+  const socketData = useContext(SocketContext);
 
-  const [showAuthButton, setShowAuthButton] = useState(true);
-  //const [showLoginButton, setShowLoginButton] = useState(true);
 
-  const [userInfo, setUserInfo] = useState("");
+  const logout = () => {
+    fetch("http://localhost:5000/api/logout", {
+      method: "POST",
+      credentials: "include",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return "OK";
+      })
+      .then(() => {
+        dispatch({ type: LOGOUT_USER_ACTION });
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
 
-  //<ThemeContext.Provider value={"Day"}>
-  //{</ThemeContext.Provider>}
+  const searchGame = () => {
+    try {
+      socketData.connect();
+      isGame(true);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const abortGame = () => {
+    socketData.status = null;
+    isGame(false);
+  }
+
+  const isAdmin = localStorage.getItem("isAdmin");
 
   return (
     <div className={styles.toolbar}>
-      <UserInfo userInfo={userInfo}/>
-      {showAuthButton && (
-      <div>
-        <button
-          type="button"
-          className={`${styles.button} ${styles.signUp}`}
-          onClick={() => setShowSignUp(true)}
-        >
-          Регистрация
-        </button>
-        <button
-          type="button"
-          className={`${styles.button} ${styles.login}`}
-          onClick={() => setShowLogin(true)}
-        >
-          Войти
-        </button>
-      </div>
+      {user && (
+        <>
+          <div className={styles.loginName}>{`${user.user?.login}`}</div>
+          {socketData.status !== "STARTED" && !isAdmin && (
+            <button
+              type="button"
+              className={`${styles.button} ${styles.signUp}`}
+              onClick={searchGame}
+            >
+              Поиск игры
+            </button>
+          )}
+          {socketData.status === "STARTED" && (
+            <button
+              type="button"
+              className={`${styles.button} ${styles.login}`}
+              onClick={() => abortGame()}
+            >
+              Сдаться
+            </button>
+          )}
+          {socketData.status === "STARTED" && (
+            <button
+              type="button"
+              className={`${styles.button} ${styles.login}`}
+              onClick={() => setShowChat((show) => !show)}
+            >
+              1/2
+            </button>
+          )}
+          {socketData.status === "STARTED" && (
+            <button
+              type="button"
+              className={`${styles.button} ${styles.login}`}
+              onClick={() => setShowChat((show) => !show)}
+            >
+              Чат
+            </button>
+          )}
+          {socketData.status === "STARTED" && (
+            <button
+              type="button"
+              className={`${styles.button} ${styles.login}`}
+              onClick={() => setShowReport((show) => !show)}
+            >
+              Жалоба
+            </button>
+          )}
+          {socketData.status === null && (
+            <button
+              type="button"
+              className={`${styles.button} ${styles.login}`}
+              onClick={logout}
+            >
+              Выйти
+            </button>
+          )}
+        </>
+      )}
+      {!user && (
+        <>
+          <button
+            type="button"
+            className={`${styles.button} ${styles.signUp}`}
+            onClick={() => setShowSignUp(true)}
+          >
+            Регистрация
+          </button>
+          <button
+            type="button"
+            className={`${styles.button} ${styles.login}`}
+            onClick={() => setShowLogin(true)}
+          >
+            Войти
+          </button>
+        </>
       )}
       {showSignUp && (
         <Modal onClose={setShowSignUp}>
-          <SignUp 
-          onClose={setShowSignUp} 
-          onSetUserInfo={setUserInfo}
-          onsetShowAuthButton={setShowAuthButton}
-          />
+          <SignUp onClose={setShowSignUp} />
         </Modal>
       )}
       {showLogin && (
         <Modal onClose={setShowLogin}>
-          <Login 
-          onClose={setShowLogin} 
-          onSetUserInfo={setUserInfo} 
-          onsetShowAuthButton={setShowAuthButton}
-          />
+          <Login onClose={setShowLogin} />
+        </Modal>
+      )}
+      {showReport && (
+        <Modal onClose={setShowReport}>
+          <Report onClose={setShowReport} />
         </Modal>
       )}
     </div>
