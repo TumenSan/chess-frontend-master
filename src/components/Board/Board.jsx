@@ -152,8 +152,12 @@ const isBlocked = (start, end, figures) => {
 //зачем? наверное как то прикрутить взятие на проходе, превращение
 const isGoodPawn = (start, end, figures, passantPos) => {
   //column check
-  if(Math.abs((start - end) % 8) === 0)
+  if(Math.abs(start - end) === 8)
     return true;
+  if((((7 < start) && (start < 16)) || ((47 < start) && (start < 56))) 
+    && (Math.abs(start - end) === 16))
+    return true;
+    
   //common take check
   const skipDisabled = ["b", "q", "r", "p", "k", "n"];
   if(skipDisabled.includes(figures[end].ascii?.toLowerCase()))
@@ -325,6 +329,7 @@ export const Board = () => {
     };
   }, []);
 
+  //выполение хода
   const executeMove = useCallback(
     (start, end) => {
       const newFigures = [...figures];
@@ -336,6 +341,20 @@ export const Board = () => {
         captured: null,
       };
       // TODO: king highlight
+      // castling
+      if ((newFigures[start].ascii.toLowerCase() === "k") && 
+        ((start === 4) || (start === 60)) && 
+        (Math.abs(start - end) === 2)){
+          let side = ((end - start) > 0) ? "0-0" : "0-0-0";
+          if (side === "0-0"){
+            newFigures[end - 1] = newFigures[end + 1];
+            newFigures[end + 1] = new Empty(null);
+          } else {
+            newFigures[end + 1] = newFigures[end - 2];
+            newFigures[end - 2] = new Empty(null);
+          }
+      }
+      //не очень понятно
       if (
         newFigures[start].ascii.toLowerCase() === "k" ||
         newFigures[start].ascii.toLowerCase() === "r"
@@ -366,16 +385,22 @@ export const Board = () => {
     [activePlayer, figures]
   );
 
+  //обработка клика
   const handleClick = (index) => {
+    //Проверяет, является ли текущий игрок активным игроком. Если нет, то выходит из функции.
     if (currentPlayer !== activePlayer) {
       return;
     }
+    //Создание копии массива фигур, чтобы не изменять оригинальный массив.
     const newFigures = [...figures];
+    /*Если исходный индекс равен -1, то проверяет, является ли 
+    выбранная фигура фигурой текущего игрока. Если нет, то выходит из функции.*/
     if (source === -1) {
       if (figures[index].player !== activePlayer) {
         return;
       }
-
+      /*Выделяет выбранную фигуру и определяет, какие клетки могут быть целевыми 
+      клетками для хода этой фигуры. Выделяет эти целевые клетки на шахматной доске.*/
       // TODO: clear highlight for king?
       newFigures[index].highlight = true;
       for (let j = 0; j < 64; j++) {
@@ -383,11 +408,17 @@ export const Board = () => {
           newFigures[j].highlight = true;
         }
       }
-
+      //Устанавливает source для текущей фигуры в index.
       setFigures(newFigures);
+      /*Если source уже установлен, то проверяет, принадлежит ли фигура 
+      текущему игроку. Если да, то очищает выделение на 
+      шахматной доске и устанавливает новые возможные целевые клетки. 
+      Если нет, то переходит к ходу фигуры.*/
       setSource(index);
     }
 
+    /*Если кликнули на фигуру того же игрока, то 
+    снимает выделение фигур и сбрасывает source до -1.*/
     // TODO: check
     if (source > -1) {
       const self = figures[index].player === activePlayer;
@@ -399,7 +430,9 @@ export const Board = () => {
 
         return;
       }
-
+      /*Если кликнули на фигуру другого игрока, то проверяет, 
+      может ли текущая фигура ходить в выбранную целевую клетку. 
+      Если нет, то выходит из функции.*/
       if (self && source !== index) {
         // resetHighlight(newFigures);
         for (let j = 0; j < 64; j++) {
@@ -415,7 +448,9 @@ export const Board = () => {
       if(!checkCanMove(source, index, newFigures)){
         return;
       }
-      
+      /*Если ход корректный, то передает данные о ходе на сервер 
+      и запускает соответствующую функцию для выполнения хода 
+      и переключения хода на другого игрока.*/
       whiteTimeoutPause.current = activePlayer === "w";
       blackTimeoutPause.current = activePlayer === "b";
       executeMove(source, index);
@@ -427,6 +462,7 @@ export const Board = () => {
     }
   };
 
+  //useEffect каждого хода
   useEffect(() => {
     const processMes = (result) => {
       switch (result.type) {
