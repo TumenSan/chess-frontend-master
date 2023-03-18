@@ -163,9 +163,8 @@ const isGoodPawn = (start, end, figures, passantPos) => {
   if(skipDisabled.includes(figures[end].ascii?.toLowerCase()))
     return true;
   //taking on pass check?...
-  //if(((23 < start < 32) && (skipDisabled.includes(figures[end].ascii?.toLowerCase()))) || 
-  //  ((31 < start < 40) && (skipDisabled.includes(figures[end].ascii?.toLowerCase()))))
-  //  return true;
+  if(end === passantPos)
+    return true;
   else return false;
 };
 
@@ -304,6 +303,7 @@ export const Board = () => {
   const whiteTimeoutPause = useRef(true);
   const [blackTime, setBlackTime] = useState(5 * 60);
   const [whiteTime, setWhiteTime] = useState(5 * 60);
+  const [passPawn, setPassPawn] = useState("-"); //проходная пешка
 
   useEffect(() => {
     const timeoutId = setInterval(() => {
@@ -340,6 +340,27 @@ export const Board = () => {
         end,
         captured: null,
       };
+      // ставим активным статус взятия на проходе
+      if((newFigures[start].ascii.toLowerCase() === "p") && 
+        (((23 < end) && (end < 32)) || ((31 < end) && (end < 40))) &&
+        (Math.abs(end - start) === 16)){
+          if (((newFigures[end + 1].ascii?.toLowerCase() === "p") && 
+            (Math.floor((end + 1) / 8) === Math.floor((end) / 8))) || 
+            ((newFigures[end - 1].ascii?.toLowerCase() === "p") && 
+            (Math.floor((end - 1) / 8) === Math.floor((end) / 8))))
+            {
+              let point = (activePlayer === "w") ? end + 8 : end - 8;
+              setPassPawn(point);
+          }
+      } else {
+        setPassPawn("-"); //возможность взятия на проходе исчезла
+      }
+      //убираем пешку сзади
+      if((newFigures[start].ascii.toLowerCase() === "p") && (end === passPawn)){
+        let delPawn = (activePlayer === "w") ? end + 8 : end - 8;
+        newFigures[delPawn] = new Empty(null);
+        setPassPawn("-");
+      }
       // TODO: king highlight
       // castling
       if ((newFigures[start].ascii.toLowerCase() === "k") && 
@@ -382,7 +403,8 @@ export const Board = () => {
         return prev === "w" ? "b" : "w";
       });
     },
-    [activePlayer, figures]
+    //[activePlayer, figures]
+    [activePlayer, figures, passPawn]
   );
 
   //обработка клика
@@ -404,7 +426,7 @@ export const Board = () => {
       // TODO: clear highlight for king?
       newFigures[index].highlight = true;
       for (let j = 0; j < 64; j++) {
-        if (checkCanMove(index, j, newFigures)) {
+        if (checkCanMove(index, j, newFigures, passPawn)) {
           newFigures[j].highlight = true;
         }
       }
@@ -436,7 +458,7 @@ export const Board = () => {
       if (self && source !== index) {
         // resetHighlight(newFigures);
         for (let j = 0; j < 64; j++) {
-          newFigures[j].highlight = checkCanMove(index, j, newFigures);
+          newFigures[j].highlight = checkCanMove(index, j, newFigures, passPawn);
         }
         newFigures[index].highlight = true;
         setSource(index);
@@ -445,7 +467,7 @@ export const Board = () => {
         return;
       }
 
-      if(!checkCanMove(source, index, newFigures)){
+      if(!checkCanMove(source, index, newFigures, passPawn)){
         return;
       }
       /*Если ход корректный, то передает данные о ходе на сервер 
