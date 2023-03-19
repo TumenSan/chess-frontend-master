@@ -329,7 +329,7 @@ export const Board = () => {
     };
   }, []);
 
-  //выполение хода
+  // выполение хода
   const executeMove = useCallback(
     (start, end) => {
       const newFigures = [...figures];
@@ -353,16 +353,27 @@ export const Board = () => {
               setPassPawn(point);
           }
       } else {
-        setPassPawn("-"); //возможность взятия на проходе исчезла
+        setPassPawn("-"); // возможность взятия на проходе исчезла
       }
-      //убираем пешку сзади
+      // убираем пешку сзади
       if((newFigures[start].ascii.toLowerCase() === "p") && (end === passPawn)){
         let delPawn = (activePlayer === "w") ? end + 8 : end - 8;
         newFigures[delPawn] = new Empty(null);
         setPassPawn("-");
+        // логика истории взятия этой пешки
+        const updateFunction =
+          activePlayer === "w" ? setCapturedByWhite : setCapturedByBlack;
+
+        historyRecord.captured = (activePlayer === "w") ? "p" : "P";
+
+        const asciiCode = "P";
+        updateFunction((prev) => ({
+          ...prev,
+          [asciiCode]: (prev[asciiCode] ?? 0) + 1,
+        }));
       }
       // TODO: king highlight
-      // castling
+      // рокировка
       if ((newFigures[start].ascii.toLowerCase() === "k") && 
         ((start === 4) || (start === 60)) && 
         (Math.abs(start - end) === 2)){
@@ -375,7 +386,7 @@ export const Board = () => {
             newFigures[end - 2] = new Empty(null);
           }
       }
-      //не очень понятно
+      // не очень понятно зачем это
       if (
         newFigures[start].ascii.toLowerCase() === "k" ||
         newFigures[start].ascii.toLowerCase() === "r"
