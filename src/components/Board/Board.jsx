@@ -168,7 +168,7 @@ const isGoodPawn = (start, end, figures, passantPos) => {
   else return false;
 };
 
-const castlingAllowed = (start, end, figures) => {
+const castlingAllowed = (start, end, figures, castling) => {
   const player = figures[start].player;
   const delta = end - start;
 
@@ -179,18 +179,34 @@ const castlingAllowed = (start, end, figures) => {
   const rookPosition =
     player === "w" ? (delta === 2 ? 63 : 56) : delta === 2 ? 7 : 0;
 
-  if (figures[rookPosition].ascii.toLowerCase() !== "r") {
+  if (figures[rookPosition].ascii?.toLowerCase() !== "r") {
     return false;
   }
-  if (figures[start].isMoved) {
+  //king move
+  if ((player === "w") && ((castling.indexOf("K") < 0) && (castling.indexOf("Q") < 0))){
     return false;
   }
-  if (figures[rookPosition].isMoved) {
+  if ((player === "b") && ((castling.indexOf("k") < 0) && (castling.indexOf("q") < 0))){
     return false;
   }
+  //rook move
+  if ((player === "w") && (castling.indexOf("K") < 0) && 
+  (figures[end + 1].ascii?.toLowerCase() === "r"))
+    return false;
+  if ((player === "w") && (castling.indexOf("Q") < 0) && 
+  (figures[end - 2].ascii?.toLowerCase() === "r"))
+    return false;
+  if ((player === "b") && (castling.indexOf("k") < 0) && 
+  (figures[end + 1].ascii?.toLowerCase() === "r"))
+    return false;
+  if ((player === "b") && (castling.indexOf("q") < 0) && 
+  (figures[end - 2].ascii?.toLowerCase() === "r"))
+    return false;
+
+  return true;
 };
 
-const invalidMove = (start, end, figures, passantPos) => {
+const invalidMove = (start, end, figures, passantPos, castling) => {
   //а n knight конь из-за прыжков так?
   const skipDisabled = ["b", "q", "r", "p", "k"];
   const currentFigure = figures[start].ascii?.toLowerCase();
@@ -203,7 +219,7 @@ const invalidMove = (start, end, figures, passantPos) => {
   if (
     currentFigure === "k" &&
     Math.abs(end - start) === 2 &&
-    castlingAllowed(start, end, figures)
+    !castlingAllowed(start, end, figures, castling)
   ) {
     return true;
   }
@@ -234,7 +250,7 @@ const isInCheck = (player, figures) => {
   return false;
 };
 
-const checkCanMove = (start, end, figures, passantPos) => {
+const checkCanMove = (start, end, figures, passantPos, castling) => {
   if (start === end) {
     return false;
   }
@@ -245,7 +261,7 @@ const checkCanMove = (start, end, figures, passantPos) => {
     return false;
   }
   console.log(end);
-  if (invalidMove(start, end, figures, passantPos)) {
+  if (invalidMove(start, end, figures, passantPos, castling)) {
     return false;
   }
   // try to castle if in check position
@@ -303,6 +319,7 @@ export const Board = () => {
   const whiteTimeoutPause = useRef(true);
   const [blackTime, setBlackTime] = useState(5 * 60);
   const [whiteTime, setWhiteTime] = useState(5 * 60);
+  const [castling, setCastling] = useState("KQkq");
   const [passPawn, setPassPawn] = useState("-"); //проходная пешка
 
   useEffect(() => {
@@ -372,10 +389,28 @@ export const Board = () => {
           [asciiCode]: (prev[asciiCode] ?? 0) + 1,
         }));
       }
+
+      if (newFigures[start].ascii.toLowerCase() === "r"){
+        if(activePlayer === "w")
+          if(start === 63)
+            setCastling(CastleState => CastleState.replace("K", ""));
+          if(start === 56)
+            setCastling(CastleState => CastleState.replace("Q", ""));
+        else 
+          if(start === 7)
+            setCastling(CastleState => CastleState.replace("k", ""));
+          if(start === 0)
+            setCastling(CastleState => CastleState.replace("q", ""));
+      }
+
       // TODO: king highlight
       // рокировка
-      if ((newFigures[start].ascii.toLowerCase() === "k") && 
-        ((start === 4) || (start === 60)) && 
+      if (newFigures[start].ascii.toLowerCase() === "k"){
+        if(activePlayer === "w")
+          setCastling(CastleState => CastleState.replace("KQ", ""));
+        else 
+          setCastling(CastleState => CastleState.replace("kq", ""));
+        if(((start === 4) || (start === 60)) && 
         (Math.abs(start - end) === 2)){
           let side = ((end - start) > 0) ? "0-0" : "0-0-0";
           if (side === "0-0"){
@@ -385,7 +420,9 @@ export const Board = () => {
             newFigures[end + 1] = newFigures[end - 2];
             newFigures[end - 2] = new Empty(null);
           }
+        }
       }
+      
       // не очень понятно зачем это
       if (
         newFigures[start].ascii.toLowerCase() === "k" ||
@@ -437,7 +474,7 @@ export const Board = () => {
       // TODO: clear highlight for king?
       newFigures[index].highlight = true;
       for (let j = 0; j < 64; j++) {
-        if (checkCanMove(index, j, newFigures, passPawn)) {
+        if (checkCanMove(index, j, newFigures, passPawn, castling)) {
           newFigures[j].highlight = true;
         }
       }
@@ -469,7 +506,7 @@ export const Board = () => {
       if (self && source !== index) {
         // resetHighlight(newFigures);
         for (let j = 0; j < 64; j++) {
-          newFigures[j].highlight = checkCanMove(index, j, newFigures, passPawn);
+          newFigures[j].highlight = checkCanMove(index, j, newFigures, passPawn, castling);
         }
         newFigures[index].highlight = true;
         setSource(index);
@@ -478,7 +515,7 @@ export const Board = () => {
         return;
       }
 
-      if(!checkCanMove(source, index, newFigures, passPawn)){
+      if(!checkCanMove(source, index, newFigures, passPawn, castling)){
         return;
       }
       /*Если ход корректный, то передает данные о ходе на сервер 
