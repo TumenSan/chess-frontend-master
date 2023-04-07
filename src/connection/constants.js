@@ -6,4 +6,5 @@ export const SocketEventsEnum = {
   GAME_OVER: "GAME_OVER",
   MOVE: "MOVE",
   CHAT: "CHAT",
+  GIVE_UP: 'GIVE_UP',
 };

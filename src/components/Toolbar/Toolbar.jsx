@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Modal } from "../Modal";
 import { SignUp } from "../SignUp";
 import { Login } from "../Login";
@@ -7,6 +7,7 @@ import styles from "./toolbar.module.css";
 import { useUser } from "../../contexts/userContext";
 import { SocketContext } from "../../contexts/socketContext";
 import { LOGOUT_USER_ACTION } from "../../actions/userActions";
+import { SocketEventsEnum } from "../../connection/constants";
 
 export const Toolbar = ({ setShowChat }) => {
   const [showSignUp, setShowSignUp] = useState(false);
@@ -39,16 +40,39 @@ export const Toolbar = ({ setShowChat }) => {
   const searchGame = () => {
     try {
       socketData.connect();
-      isGame(true);
+      isGame("search");
     } catch (e) {
       console.log(e);
     }
   };
 
   const abortGame = () => {
+    socketData.send({
+      type: SocketEventsEnum.GIVE_UP,
+    });
     socketData.status = null;
-    isGame(false);
+    isGame("gameWas");
   }
+
+  //useEffect GiveUp
+  useEffect(() => {
+    const processMes = (result) => {
+      switch (result.type) {
+        case SocketEventsEnum.GIVE_UP:
+          socketData.status = null;
+          isGame("gameWas");
+          break;
+        default:
+          console.log("Unknown");
+      }
+    };
+
+    socketData.subscribe(processMes);
+
+    return () => {
+      socketData.unsubscribe(processMes);
+    };
+  }, [socketData]);
 
   const isAdmin = localStorage.getItem("isAdmin");
 
@@ -63,8 +87,13 @@ export const Toolbar = ({ setShowChat }) => {
               className={`${styles.button} ${styles.signUp}`}
               onClick={searchGame}
             >
-              Поиск игры
+              Новая игра
             </button>
+          )}
+          {(GameStatus === "search") && (socketData.status !== "STARTED") && !isAdmin && (
+            <>
+              Поиск игры
+            </>
           )}
           {socketData.status === "STARTED" && (
             <button
@@ -93,7 +122,7 @@ export const Toolbar = ({ setShowChat }) => {
               Чат
             </button>
           )}
-          {socketData.status === "STARTED" && (
+          {GameStatus === "gameWas" && (
             <button
               type="button"
               className={`${styles.button} ${styles.login}`}

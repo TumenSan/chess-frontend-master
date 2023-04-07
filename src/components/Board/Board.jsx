@@ -526,6 +526,8 @@ export const Board = () => {
       executeMove(source, index);
       socketData.send({
         type: SocketEventsEnum.MOVE,
+        figure: newFigures[source].ascii,
+        figureEnd: newFigures[index].ascii,
         start: source,
         end: index,
       });
