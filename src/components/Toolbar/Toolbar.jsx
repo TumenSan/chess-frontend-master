@@ -8,6 +8,7 @@ import { useUser } from "../../contexts/userContext";
 import { SocketContext } from "../../contexts/socketContext";
 import { LOGOUT_USER_ACTION } from "../../actions/userActions";
 import { SocketEventsEnum } from "../../connection/constants";
+import { Loader } from "../commons/Loader";
 
 export const Toolbar = ({ setShowChat }) => {
   const [showSignUp, setShowSignUp] = useState(false);
@@ -60,6 +61,7 @@ export const Toolbar = ({ setShowChat }) => {
       switch (result.type) {
         case SocketEventsEnum.GIVE_UP:
           socketData.status = null;
+          socketData.opponent = null;
           isGame("gameWas");
           break;
         default:
@@ -80,7 +82,13 @@ export const Toolbar = ({ setShowChat }) => {
     <div className={styles.toolbar}>
       {user && (
         <>
-          <div className={styles.loginName}>{`${user.user?.login}`}</div>
+          <div
+            type="button" 
+            className={styles.loginName}
+            onClick={() => setShowChat((show) => !show)}
+            >
+              {`${user.user?.login}`}
+          </div>
           {socketData.status !== "STARTED" && !isAdmin && (
             <button
               type="button"
@@ -92,7 +100,7 @@ export const Toolbar = ({ setShowChat }) => {
           )}
           {(GameStatus === "search") && (socketData.status !== "STARTED") && !isAdmin && (
             <>
-              Поиск игры
+              <Loader />
             </>
           )}
           {socketData.status === "STARTED" && (
@@ -122,13 +130,22 @@ export const Toolbar = ({ setShowChat }) => {
               Чат
             </button>
           )}
+          {socketData.status === "STARTED" && (
+            <div
+              type="button" 
+              className={styles.loginName}
+              onClick={() => setShowChat((show) => !show)}
+              >
+                {`${socketData?.opponent}`}
+            </div>
+          )}
           {GameStatus === "gameWas" && (
             <button
               type="button"
               className={`${styles.button} ${styles.login}`}
               onClick={() => setShowReport((show) => !show)}
             >
-              Жалоба
+              Отчет
             </button>
           )}
           {socketData.status === null && (
