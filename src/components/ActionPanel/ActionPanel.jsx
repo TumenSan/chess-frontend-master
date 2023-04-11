@@ -52,6 +52,7 @@ export const ActionPanel = ({ history, text }) => {
         {chunkedArray.map(([first, second], index) => {
           return (
             <>
+              {index + 1}
               {first && <HistoryItem item={first} step={index + 1} />}
               {second && <HistoryItem item={second} />}
               -----------------

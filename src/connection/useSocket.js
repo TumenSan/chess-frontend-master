@@ -1,7 +1,6 @@
-import { useRef, useState, useContext } from "react";
+import { useRef, useState } from "react";
 import { useUser } from "../contexts/userContext";
 import { SocketEventsEnum } from "./constants";
-import { SocketContext } from "../contexts/socketContext";
 
 export const useSocket = () => {
   const [{ user }] = useUser();
@@ -9,7 +8,6 @@ export const useSocket = () => {
   const connectionId = useRef(null);  
 	const subscribers = useRef([]);
 	const [status, setStatus] = useState(null);
-  const socketData = useContext(SocketContext);
 
   const connect = () => {
     ws.current = new WebSocket(`ws://localhost:5000?token=${user.accessToken}`);
@@ -36,8 +34,6 @@ export const useSocket = () => {
           break;
         case SocketEventsEnum.START_GAME:
 					setStatus('STARTED');
-          console.log(socketData);
-          //socketData.opponent = result.opponent;
           connectionId.current = result.connectionId;
           break;
 				case SocketEventsEnum.GAME_OVER:

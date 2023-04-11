@@ -1,8 +1,10 @@
 import { useContext, useState, useEffect } from "react";
 import { Modal } from "../Modal";
+import { ModalPlayer } from '../ModalPlayer';
 import { SignUp } from "../SignUp";
 import { Login } from "../Login";
 import { Report } from "../Report";
+import { PersonalAccount } from "../PersonalAccount"
 import styles from "./toolbar.module.css";
 import { useUser } from "../../contexts/userContext";
 import { SocketContext } from "../../contexts/socketContext";
@@ -14,7 +16,9 @@ export const Toolbar = ({ setShowChat }) => {
   const [showSignUp, setShowSignUp] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [showReport, setShowReport] = useState(false);
+  const [showPersonalAccount, setShowPersonalAccount] = useState(false);
   const [GameStatus, isGame] = useState(false);
+  const [opponent, setOpponent] = useState(false);
   const [{ user }, dispatch] = useUser();
   const socketData = useContext(SocketContext);
 
@@ -62,7 +66,13 @@ export const Toolbar = ({ setShowChat }) => {
         case SocketEventsEnum.GIVE_UP:
           socketData.status = null;
           socketData.opponent = null;
+          setOpponent(false);
           isGame("gameWas");
+          break;
+        case SocketEventsEnum.START_GAME:
+          socketData.opponent = result.opponent;
+          console.log("oppon: ", result.opponent);
+          setOpponent(result.opponent);
           break;
         default:
           console.log("Unknown");
@@ -85,10 +95,15 @@ export const Toolbar = ({ setShowChat }) => {
           <div
             type="button" 
             className={styles.loginName}
-            onClick={() => setShowChat((show) => !show)}
+            onClick={() => setShowPersonalAccount(true)}
             >
               {`${user.user?.login}`}
           </div>
+          {showPersonalAccount && (
+            <ModalPlayer onClose={setShowPersonalAccount}>
+              <PersonalAccount onClose={setShowPersonalAccount} />
+            </ModalPlayer>
+          )}
           {socketData.status !== "STARTED" && !isAdmin && (
             <button
               type="button"
@@ -136,7 +151,7 @@ export const Toolbar = ({ setShowChat }) => {
               className={styles.loginName}
               onClick={() => setShowChat((show) => !show)}
               >
-                {`${socketData?.opponent}`}
+                {`${opponent}`}
             </div>
           )}
           {GameStatus === "gameWas" && (
