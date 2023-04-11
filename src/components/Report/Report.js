@@ -12,7 +12,7 @@ export const Report = ({ onClose, title, adminView = false }) => {
 
   return (
     <div className={styles.report}>
-      <h3>{title ?? "Пожаловаться на игрока"}</h3>
+      <h3>{title ?? "Сообщить о нарушениях"}</h3>
       <section>
         <form onSubmit={onSubmit}>
           {!adminView && (
@@ -34,15 +34,6 @@ export const Report = ({ onClose, title, adminView = false }) => {
                   name="radioGroup"
                 />
                 <label for="leaving">Игрок покинул игру</label>
-              </p>
-              <p>
-                <input
-                  type="radio"
-                  id="cheating"
-                  value="cheating"
-                  name="radioGroup"
-                />
-                <label for="cheating">Мошенничество</label>
               </p>
               <p>
                 <input

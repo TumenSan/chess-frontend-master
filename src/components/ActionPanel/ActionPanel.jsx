@@ -51,12 +51,11 @@ export const ActionPanel = ({ history, text }) => {
       <div className={styles.history}>
         {chunkedArray.map(([first, second], index) => {
           return (
-            <>
-              {index + 1}
+            <div className={styles.moves}>
+              {index + 1}.
               {first && <HistoryItem item={first} step={index + 1} />}
               {second && <HistoryItem item={second} />}
-              -----------------
-            </>
+            </div>
           );
         })}
       </div>

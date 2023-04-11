@@ -4,6 +4,8 @@ import { SocketContext } from "../../contexts/socketContext";
 import { Square } from "../Square";
 import { Figure } from "../Figure";
 import { CapturedPieces } from "../CapturedPieces";
+import { PawnPromotion } from "../PawnPromotion";
+import { ModalPromotion } from "../ModalPromotion";
 import { ActionPanel } from "../ActionPanel";
 import {
   Pawn,
@@ -149,7 +151,6 @@ const isBlocked = (start, end, figures) => {
   return false;
 };
 
-//зачем? наверное как то прикрутить взятие на проходе, превращение
 const isGoodPawn = (start, end, figures, passantPos) => {
   //column check
   if(Math.abs(start - end) === 8)
@@ -321,6 +322,7 @@ export const Board = () => {
   const [whiteTime, setWhiteTime] = useState(5 * 60);
   const [castling, setCastling] = useState("KQkq");
   const [passPawn, setPassPawn] = useState("-"); //проходная пешка
+  const [pawnPromote, setShowPawnPromotion] = useState(false);
 
   useEffect(() => {
     const timeoutId = setInterval(() => {
@@ -357,6 +359,10 @@ export const Board = () => {
         end,
         captured: null,
       };
+      if((newFigures[start].ascii.toLowerCase() === "p") &&
+        ((end < 8) || (end > 55))){
+        setShowPawnPromotion(true);
+      }
       // ставим активным статус взятия на проходе
       if((newFigures[start].ascii.toLowerCase() === "p") && 
         (((23 < end) && (end < 32)) || ((31 < end) && (end < 40))) &&
@@ -582,9 +588,14 @@ export const Board = () => {
         {currentPlayer === "b" ? fmtMSS(blackTime) : fmtMSS(whiteTime)}
       </div>
       <ActionPanel
-        text={`Ходят ${activePlayer === "b" ? "черные" : "белые"}`}
+        text={`Ход ${activePlayer === "b" ? "черных" : "белых"}`}
         history={history}
       />
+      {pawnPromote && (
+        <ModalPromotion onClose={setShowPawnPromotion}>
+          <PawnPromotion/>
+        </ModalPromotion>
+      )}
     </>
   );
 };

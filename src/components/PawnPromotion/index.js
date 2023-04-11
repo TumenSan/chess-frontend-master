@@ -1,0 +1,1 @@
+export { PawnPromotion } from './PawnPromotion';

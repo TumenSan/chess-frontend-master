@@ -1,19 +1,18 @@
 import { useState } from "react";
 import { LoginFieldsEnum } from "./constants";
 import { useUser } from "../../contexts/userContext";
-import { SET_USER_ACTION } from "../../actions/userActions";
 import styles from "./account.module.css";
 import { Loader } from "../commons/Loader";
 
 export const PersonalAccount = ({ onClose }) => {
-  const [, dispatch] = useUser();
+  const [{ user }] = useUser();
   const [isLoading, setIsLoading] = useState(false);
   const [games, setGames] = useState([]);
 
   const userGames = (event) => {
     event.preventDefault();
 
-    const login = event.target[0].value;
+    const login = user;
 
     const data = { login };
 
@@ -48,19 +47,13 @@ export const PersonalAccount = ({ onClose }) => {
 
   return (
     <div className={styles.signUp}>
-      <h3>Пользователь</h3>
+      <h3>{`${user.user?.login}`}</h3>
       <section>
         <form onSubmit={userGames}>
           <label htmlFor={LoginFieldsEnum.name}>
-            <input
-              type="text"
-              id={LoginFieldsEnum.name}
-              name={LoginFieldsEnum.name}
-              placeholder="Логин"
-            />
           </label>
           {isLoading && <Loader />}
-          {!isLoading && <input type="submit" value="Найти игры" />}
+          {!isLoading && <input type="submit" value="Показать игры" />}
         </form>
         {games?.map((game, i) => (
                 <div className="Games" key={i}>

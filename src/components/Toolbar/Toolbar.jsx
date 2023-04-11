@@ -104,74 +104,77 @@ export const Toolbar = ({ setShowChat }) => {
               <PersonalAccount onClose={setShowPersonalAccount} />
             </ModalPlayer>
           )}
-          {socketData.status !== "STARTED" && !isAdmin && (
-            <button
-              type="button"
-              className={`${styles.button} ${styles.signUp}`}
-              onClick={searchGame}
-            >
-              Новая игра
-            </button>
-          )}
-          {(GameStatus === "search") && (socketData.status !== "STARTED") && !isAdmin && (
-            <>
-              <Loader />
-            </>
-          )}
-          {socketData.status === "STARTED" && (
-            <button
-              type="button"
-              className={`${styles.button} ${styles.login}`}
-              onClick={() => abortGame()}
-            >
-              Сдаться
-            </button>
-          )}
-          {socketData.status === "STARTED" && (
-            <button
-              type="button"
-              className={`${styles.button} ${styles.login}`}
-              onClick={() => setShowChat((show) => !show)}
-            >
-              1/2
-            </button>
-          )}
-          {socketData.status === "STARTED" && (
-            <button
-              type="button"
-              className={`${styles.button} ${styles.login}`}
-              onClick={() => setShowChat((show) => !show)}
-            >
-              Чат
-            </button>
-          )}
-          {socketData.status === "STARTED" && (
-            <div
-              type="button" 
-              className={styles.loginName}
-              onClick={() => setShowChat((show) => !show)}
+          <div className={styles.justContentCenter}>
+            {socketData.status !== "STARTED" && !isAdmin && (
+              <button
+                type="button"
+                className={`${styles.button} ${styles.signUp}`}
+                onClick={searchGame}
               >
-                {`${opponent}`}
-            </div>
-          )}
-          {GameStatus === "gameWas" && (
-            <button
-              type="button"
-              className={`${styles.button} ${styles.login}`}
-              onClick={() => setShowReport((show) => !show)}
-            >
-              Отчет
-            </button>
-          )}
-          {socketData.status === null && (
-            <button
-              type="button"
-              className={`${styles.button} ${styles.login}`}
-              onClick={logout}
-            >
-              Выйти
-            </button>
-          )}
+                Новая игра
+              </button>
+            )}
+            {(GameStatus === "search") && (socketData.status !== "STARTED") && !isAdmin && (
+              <>
+                <Loader />
+              </>
+            )}
+            {socketData.status === "STARTED" && (
+              <button
+                type="button"
+                className={`${styles.button} ${styles.login}`}
+                onClick={() => abortGame()}
+              >
+                Сдаться
+              </button>
+            )}
+            {socketData.status === "STARTED" && (
+              <button
+                type="button"
+                className={`${styles.button} ${styles.login}`}
+                onClick={() => setShowChat((show) => !show)}
+              >
+                1/2
+              </button>
+            )}
+            {socketData.status === "STARTED" && (
+              <button
+                type="button"
+                className={`${styles.button} ${styles.login}`}
+                onClick={() => setShowChat((show) => !show)}
+              >
+                Чат
+              </button>
+            )}
+            {socketData.status === "STARTED" && (
+              <div
+                type="button"
+                className={styles.loginName}
+                onClick={() => setShowChat((show) => !show)}
+                >
+                  {`${opponent}`} <br/>
+                {`${user.user?.login}`}
+              </div>
+            )}
+            {GameStatus === "gameWas" && (
+              <button
+                type="button"
+                className={`${styles.button} ${styles.login}`}
+                onClick={() => setShowReport((show) => !show)}
+              >
+                Отчет
+              </button>
+            )}
+            {socketData.status === null && (
+              <button
+                type="button"
+                className={`${styles.button} ${styles.login}`}
+                onClick={logout}
+              >
+                Выйти
+              </button>
+            )}
+          </div>
         </>
       )}
       {!user && (
