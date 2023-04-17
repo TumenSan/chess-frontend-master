@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { Board } from "./components/Board";
+import { UsefulMaterials } from "./components/UsefulMaterials";
 import { Toolbar } from "./components/Toolbar";
 import { Chat } from "./components/Chat";
+import {BrowserRouter as Router,
+    Route, Routes
+} from 'react-router-dom';
 import "./App.css";
 
 const App = () => {
@@ -10,8 +14,21 @@ const App = () => {
   return (
     <div className="app">
       <Toolbar setShowChat={setShowChat} />
-      <Board />
-      <Chat visible={showChat} close={() => setShowChat(false)} />
+        <Router>
+            <Routes>
+                <Route path="/*" element={<Board />}></Route>
+                <Route path="/Tasks/*" element={(<h1>Задачи</h1>)}></Route>
+                <Route path="/watchgames/*" element={(<h1>Смотреть игры</h1>)}></Route>
+                <Route path="/usefulmaterials/*" element={<UsefulMaterials />}></Route>
+                <Route path="*" element={(<h1>Ошибка</h1>)}></Route>
+            </Routes>
+        </Router>
+        <Router>
+            <Routes>
+                <Route path="/*" element={<Chat visible={showChat} close={() => setShowChat(false)} />}></Route>
+                <Route path="*" element={(<h1>Ошибка</h1>)}></Route>
+            </Routes>
+        </Router>
     </div>
   );
 };

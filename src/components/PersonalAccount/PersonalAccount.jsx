@@ -1,17 +1,15 @@
-import { useState } from "react";
-import { LoginFieldsEnum } from "./constants";
+import { useState, useEffect } from "react";
 import { useUser } from "../../contexts/userContext";
 import styles from "./account.module.css";
 import { Loader } from "../commons/Loader";
+import { Scrollbar } from "react-scrollbars-custom";
 
 export const PersonalAccount = ({ onClose }) => {
   const [{ user }] = useUser();
   const [isLoading, setIsLoading] = useState(false);
   const [games, setGames] = useState([]);
 
-  const userGames = (event) => {
-    event.preventDefault();
-
+  useEffect(() => {
     const login = user;
 
     const data = { login };
@@ -43,29 +41,27 @@ export const PersonalAccount = ({ onClose }) => {
       .finally(() => {
         setIsLoading(false);
       });
-  };
+  }, [user]);
 
   return (
     <div className={styles.signUp}>
       <h3>{`${user.user?.login}`}</h3>
-      <section>
-        <form onSubmit={userGames}>
-          <label htmlFor={LoginFieldsEnum.name}>
-          </label>
+      <Scrollbar style={{ width: 900, height: 450 }}>
+        <section>
           {isLoading && <Loader />}
-          {!isLoading && <input type="submit" value="Показать игры" />}
-        </form>
-        {games?.map((game, i) => (
-                <div className="Games" key={i}>
-                    <div className="Game">
-                        <b>{game.playerWhiteLogin}</b> <br/>
-                        <b>{game.playerBlackLogin}</b> <br/>
-                        <b>{game.gameResult}</b> <br/>
-                        <p>{game.pgn}</p>
-                    </div>
-                </div>
-            ))}
-      </section>
+          {games?.map((game, i) => (
+                  <div className={styles.Games} key={i}>
+                      <div className={styles.Game}>
+                          <b>{`${game.playerWhiteLogin} - ${game.playerBlackLogin}`}</b> <br/>
+                          <b>{game.gameResult}</b> <br/>
+                          <b>{game?.date}</b> <br/>
+                          <p>{game.pgn}</p>
+                          <a href="http://localhost:3000/">Анализ партии</a>
+                      </div>
+                  </div>
+              ))}
+        </section>
+      </Scrollbar>
     </div>
   );
 };

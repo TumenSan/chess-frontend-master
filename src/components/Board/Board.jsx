@@ -164,9 +164,7 @@ const isGoodPawn = (start, end, figures, passantPos) => {
   if(skipDisabled.includes(figures[end].ascii?.toLowerCase()))
     return true;
   //taking on pass check?...
-  if(end === passantPos)
-    return true;
-  else return false;
+  return end === passantPos;
 };
 
 const castlingAllowed = (start, end, figures, castling) => {
@@ -200,7 +198,7 @@ const castlingAllowed = (start, end, figures, castling) => {
   if ((player === "b") && (castling.indexOf("k") < 0) && 
   (figures[end + 1].ascii?.toLowerCase() === "r"))
     return false;
-  if ((player === "b") && (castling.indexOf("q") < 0) && 
+  if ((player === "b") && (castling.indexOf("q") < 0) &&
   (figures[end - 2].ascii?.toLowerCase() === "r"))
     return false;
 
@@ -318,8 +316,8 @@ export const Board = () => {
   const [history, setHistory] = useState([]);
   const blackTimeoutPause = useRef(true);
   const whiteTimeoutPause = useRef(true);
-  const [blackTime, setBlackTime] = useState(5 * 60);
-  const [whiteTime, setWhiteTime] = useState(5 * 60);
+  const [blackTime, setBlackTime] = useState(15 * 60);
+  const [whiteTime, setWhiteTime] = useState(15 * 60);
   const [castling, setCastling] = useState("KQkq");
   const [passPawn, setPassPawn] = useState("-"); //проходная пешка
   const [pawnPromote, setShowPawnPromotion] = useState(false);
@@ -422,14 +420,16 @@ export const Board = () => {
           if (side === "0-0"){
             newFigures[end - 1] = newFigures[end + 1];
             newFigures[end + 1] = new Empty(null);
+            historyRecord.figure = "0-0";
           } else {
             newFigures[end + 1] = newFigures[end - 2];
             newFigures[end - 2] = new Empty(null);
+            historyRecord.figure = "0-0-0";
           }
         }
       }
       
-      // не очень понятно зачем это
+      // рокировка?
       if (
         newFigures[start].ascii.toLowerCase() === "k" ||
         newFigures[start].ascii.toLowerCase() === "r"
@@ -452,6 +452,11 @@ export const Board = () => {
       newFigures[start] = new Empty(null);
       setFigures(newFigures);
       setSource(-1);
+      if((historyRecord.figure === "0-0") || (historyRecord.figure === "0-0-0")){
+        historyRecord.start = null;
+        historyRecord.end = null;
+        historyRecord.captured = null;
+      }
       setHistory((h) => [...h, historyRecord]);
       setActivePlayer((prev) => {
         return prev === "w" ? "b" : "w";
@@ -545,8 +550,23 @@ export const Board = () => {
     const processMes = (result) => {
       switch (result.type) {
         case SocketEventsEnum.START_GAME:
+          setFigures(() => initializeBoard());
+          setHistory([]);
+          socketData.status = "STARTED";
           whiteTimeoutPause.current = false;
           setCurrentPlayer(result.side);
+          setActivePlayer("w");
+          setSource(-1);
+          setCapturedByWhite({});
+          setCapturedByBlack({});
+          setBlackTime(15 * 60);
+          setWhiteTime(15 * 60);
+          setCastling("KQkq");
+          setPassPawn("-"); //проходная пешка
+          setShowPawnPromotion(false);
+          break;
+        case SocketEventsEnum.GIVE_UP:
+          socketData.status = null;
           break;
         case SocketEventsEnum.MOVE:
           whiteTimeoutPause.current = !whiteTimeoutPause.current;

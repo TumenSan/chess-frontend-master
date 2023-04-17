@@ -1,4 +1,6 @@
 import { useContext, useState, useEffect } from "react";
+import {Route, Routes, Link, redirect
+} from 'react-router-dom';
 import { Modal } from "../Modal";
 import { ModalPlayer } from '../ModalPlayer';
 import { SignUp } from "../SignUp";
@@ -164,6 +166,15 @@ export const Toolbar = ({ setShowChat }) => {
               >
                 Отчет
               </button>
+            )}
+            {socketData.status !== "STARTED" && (
+                <a href="/tasks">Задачи</a>
+            )}
+            {socketData.status !== "STARTED" && (
+                <a href="/watchgames">Просмотр партии</a>
+            )}
+            {socketData.status !== "STARTED" && (
+                <a href="/usefulmaterials">Полезные материалы</a>
             )}
             {socketData.status === null && (
               <button
