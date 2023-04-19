@@ -57,22 +57,22 @@ export const Toolbar = ({ setShowChat }) => {
     socketData.send({
       type: SocketEventsEnum.GIVE_UP,
     });
-    socketData.status = null;
+    socketData.setSocket(null);
     isGame("gameWas");
   }
 
-  //useEffect GiveUp
+  //useEffect GiveUp and StartGame
   useEffect(() => {
     const processMes = (result) => {
       switch (result.type) {
         case SocketEventsEnum.GIVE_UP:
-          socketData.status = null;
-          socketData.opponent = null;
+          socketData.setSocket(null);
+          socketData.setOpponent(null);
           setOpponent(false);
           isGame("gameWas");
           break;
         case SocketEventsEnum.START_GAME:
-          socketData.opponent = result.opponent;
+          socketData.opponentStatus = result.opponent;
           console.log("oppon: ", result.opponent);
           setOpponent(result.opponent);
           break;

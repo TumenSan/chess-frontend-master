@@ -7,6 +7,7 @@ export const useSocket = () => {
   const ws = useRef(null);
   const connectionId = useRef(null);  
 	const subscribers = useRef([]);
+    const [opponentStatus, setOpponentStatus] = useState(null);
 	const [status, setStatus] = useState(null);
 
   const connect = () => {
@@ -53,6 +54,14 @@ export const useSocket = () => {
     ws.current.close();
   };
 
+  const setSocket = (data) => {
+        setStatus(data);
+  }
+
+  const setOpponent = (data) => {
+      setOpponentStatus(data);
+  }
+
   const send = (data) => {
     ws.current.send(JSON.stringify({ ...data, connectionId: connectionId.current }));
   };
@@ -65,5 +74,6 @@ export const useSocket = () => {
 		subscribers.current = subscribers.current.filter(c => c !== callback);
 	};
 
-  return { socket: ws.current, status, connect, close, send, subscribe, unsubscribe };
+  return { socket: ws.current, status, opponentStatus, connect, close,
+      setSocket, setOpponent, send, subscribe, unsubscribe };
 };

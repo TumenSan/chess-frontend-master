@@ -552,7 +552,7 @@ export const Board = () => {
         case SocketEventsEnum.START_GAME:
           setFigures(() => initializeBoard());
           setHistory([]);
-          socketData.status = "STARTED";
+          socketData.setSocket("STARTED");
           whiteTimeoutPause.current = false;
           setCurrentPlayer(result.side);
           setActivePlayer("w");
@@ -566,7 +566,7 @@ export const Board = () => {
           setShowPawnPromotion(false);
           break;
         case SocketEventsEnum.GIVE_UP:
-          socketData.status = null;
+          socketData.setSocket(null);
           break;
         case SocketEventsEnum.MOVE:
           whiteTimeoutPause.current = !whiteTimeoutPause.current;
