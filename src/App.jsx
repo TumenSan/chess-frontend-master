@@ -17,7 +17,9 @@ const App = () => {
         <Router>
             <Routes>
                 <Route path="/*" element={<Board />}></Route>
-                <Route path="/Tasks/*" element={(<h1>Задачи</h1>)}></Route>
+                <Route path="/tasks/tactics/*" element={(<h1>Тактика</h1>)}></Route>
+                <Route path="/tasks/opening/*" element={(<h1>Дебют</h1>)}></Route>
+                <Route path="/tasks/endgame/*" element={(<h1>Эндшпиль</h1>)}></Route>
                 <Route path="/watchgames/*" element={(<h1>Смотреть игры</h1>)}></Route>
                 <Route path="/usefulmaterials/*" element={<UsefulMaterials />}></Route>
                 <Route path="*" element={(<h1>Ошибка</h1>)}></Route>

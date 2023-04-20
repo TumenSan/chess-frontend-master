@@ -23,7 +23,9 @@ export const Toolbar = ({ setShowChat }) => {
   const [opponent, setOpponent] = useState(false);
   const [{ user }, dispatch] = useUser();
   const socketData = useContext(SocketContext);
-
+  const [isOpenTasks, setIsOpenTasks] = useState(false);
+  const [isOpenGames, setIsOpenGames] = useState(false);
+  const [isOpenMaterials, setIsOpenMaterials] = useState(false);
 
   const logout = () => {
     fetch("http://localhost:5000/api/logout", {
@@ -87,6 +89,16 @@ export const Toolbar = ({ setShowChat }) => {
       socketData.unsubscribe(processMes);
     };
   }, [socketData]);
+
+  const toggleMenuTasks = () => {
+    setIsOpenTasks(!isOpenTasks);
+  }
+  const toggleMenuGames = () => {
+    setIsOpenGames(!isOpenGames);
+  }
+  const toggleMenuMaterials = () => {
+    setIsOpenMaterials(!isOpenMaterials);
+  }
 
   const isAdmin = localStorage.getItem("isAdmin");
 
@@ -168,13 +180,34 @@ export const Toolbar = ({ setShowChat }) => {
               </button>
             )}
             {socketData.status !== "STARTED" && (
-                <a href="/tasks">Задачи</a>
+                <div>
+                  <a href="/">Доска</a>
+                </div>
+            )}
+            {socketData.status !== "STARTED" && (
+                <div>
+                  <div onClick={toggleMenuTasks}>Задачи</div>
+                  {isOpenTasks && (
+                      <ul>
+                        <li><a href="/tasks/tactics">Тактика</a></li>
+                        <li><a href="/tasks/opening">Дебют</a></li>
+                        <li><a href="/tasks/endgame">Эндшпиль</a></li>
+                      </ul>
+                  )}
+                </div>
             )}
             {socketData.status !== "STARTED" && (
                 <a href="/watchgames">Просмотр партии</a>
             )}
             {socketData.status !== "STARTED" && (
-                <a href="/usefulmaterials">Полезные материалы</a>
+                <div>
+                  <div onClick={toggleMenuMaterials}>Полезные материалы</div>
+                  {isOpenMaterials && (
+                      <ul>
+                        <li><a href="/usefulmaterials">Полезные материалы</a></li>
+                      </ul>
+                  )}
+                </div>
             )}
             {socketData.status === null && (
               <button

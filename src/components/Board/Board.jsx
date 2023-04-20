@@ -351,11 +351,13 @@ export const Board = () => {
     (start, end) => {
       const newFigures = [...figures];
       resetHighlight(newFigures);
-      const historyRecord = {
+      let castling = null;
+      let historyRecord = {
         figure: figures[start].ascii,
         start,
         end,
         captured: null,
+        castling: null,
       };
       if((newFigures[start].ascii.toLowerCase() === "p") &&
         ((end < 8) || (end > 55))){
@@ -420,11 +422,11 @@ export const Board = () => {
           if (side === "0-0"){
             newFigures[end - 1] = newFigures[end + 1];
             newFigures[end + 1] = new Empty(null);
-            historyRecord.figure = "0-0";
+            historyRecord.castling = "0-0";
           } else {
             newFigures[end + 1] = newFigures[end - 2];
             newFigures[end - 2] = new Empty(null);
-            historyRecord.figure = "0-0-0";
+            historyRecord.castling = "0-0-0";
           }
         }
       }
@@ -448,15 +450,15 @@ export const Board = () => {
           [asciiCode]: (prev[asciiCode] ?? 0) + 1,
         }));
       }
-      newFigures[end] = newFigures[start];
-      newFigures[start] = new Empty(null);
-      setFigures(newFigures);
-      setSource(-1);
-      if((historyRecord.figure === "0-0") || (historyRecord.figure === "0-0-0")){
+      if((historyRecord.castling === "0-0") || (historyRecord.castling === "0-0-0")){
         historyRecord.start = null;
         historyRecord.end = null;
         historyRecord.captured = null;
       }
+      newFigures[end] = newFigures[start];
+      newFigures[start] = new Empty(null);
+      setFigures(newFigures);
+      setSource(-1);
       setHistory((h) => [...h, historyRecord]);
       setActivePlayer((prev) => {
         return prev === "w" ? "b" : "w";

@@ -14,12 +14,21 @@ const normalizePosition = (position) => {
 const HistoryItem = ({ item }) => {
   return (
     <div className={styles.historyItem}>
-      <CapturedPieces
-        capturedPieces={{ [item.figure]: 1 }}
-        player={item.figure.toLowerCase() === item.figure ? "b" : "w"}
-      />
-      {normalizePosition(item.start)}
-      {" - "}
+        {item.castling ? (
+            <>
+                {item.castling}
+            </>
+        ) : null}
+        {!item.castling ? (
+            <>
+              <CapturedPieces
+                capturedPieces={{ [item.figure]: 1 }}
+                player={item.figure.toLowerCase() === item.figure ? "b" : "w"}
+              />
+              {normalizePosition(item.start)}
+              {" - "}
+            </>
+        ) : null}
       {item.captured ? (
         <>
           <CapturedPieces
@@ -29,7 +38,11 @@ const HistoryItem = ({ item }) => {
           x
         </>
       ) : null}
-      {normalizePosition(item.end)}
+      {!item.castling ? (
+        <>
+            {normalizePosition(item.end)}
+        </>
+      ) : null}
     </div>
   );
 };
