@@ -181,12 +181,7 @@ export const Toolbar = ({ setShowChat }) => {
             )}
             {socketData.status !== "STARTED" && (
                 <div>
-                  <a href="/">Доска</a>
-                </div>
-            )}
-            {socketData.status !== "STARTED" && (
-                <div>
-                  <div onClick={toggleMenuTasks}>Задачи</div>
+                  <div onClick={toggleMenuTasks} className={styles.panel}>Задачи</div>
                   {isOpenTasks && (
                       <ul>
                         <li><a href="/tasks/tactics">Тактика</a></li>
@@ -201,7 +196,7 @@ export const Toolbar = ({ setShowChat }) => {
             )}
             {socketData.status !== "STARTED" && (
                 <div>
-                  <div onClick={toggleMenuMaterials}>Полезные материалы</div>
+                  <div onClick={toggleMenuMaterials} className={styles.panel}>Полезные материалы</div>
                   {isOpenMaterials && (
                       <ul>
                         <li><a href="/usefulmaterials">Полезные материалы</a></li>
@@ -212,7 +207,7 @@ export const Toolbar = ({ setShowChat }) => {
             {socketData.status === null && (
               <button
                 type="button"
-                className={`${styles.button} ${styles.login}`}
+                className={`${styles.button} ${styles.login} ${styles.outButton}`}
                 onClick={logout}
               >
                 Выйти

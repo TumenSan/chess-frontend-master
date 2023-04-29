@@ -85,3 +85,22 @@
   background-color: rgba(194, 194, 194, 0.2);
   outline: none;
 }
+
+.panel {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.outButton {
+  position: fixed;
+  bottom: 0;
+  width: 130px;
+}
+
+a {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  color: #808080;
+  text-decoration: none
+}
