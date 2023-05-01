@@ -48,6 +48,7 @@ const HistoryItem = ({ item }) => {
 };
 
 export const ActionPanel = ({ history, text }) => {
+  console.log("ActionPanel", history, text);
   const [showReport, setShowReport] = useState(false);
   const buttonType = useRef("");
 

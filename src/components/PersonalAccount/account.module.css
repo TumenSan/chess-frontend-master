@@ -33,6 +33,10 @@
     background-color: #2ea44f;
   }
 
-  .game {
+  .Games {
     margin-top: 20px;
+  }
+
+  .Game {
+    margin-top: 40px;
   }

@@ -8,16 +8,37 @@ import {BrowserRouter as Router,
     Route, Routes
 } from 'react-router-dom';
 import "./App.css";
+import {ActionPanel} from "./components/ActionPanel";
 
 const App = () => {
   const [showChat, setShowChat] = useState(false);
+  const [history, setHistory] = useState([]);
+  const [activePlayer, setActivePlayer] = useState("w");
+
+    function handleStateChangeHistory(newState) {
+        setHistory(newState);
+        console.log("handleStateChangeHistory", history)
+    }
+    function handleStateChangeActivePlayer(newState) {
+        setActivePlayer(newState);
+        console.log("handleStateChangeActivePlayer", activePlayer)
+    }
 
   return (
     <div className="app">
       <Toolbar setShowChat={setShowChat} />
         <Router>
             <Routes>
-                <Route path="/*" element={<Board />}></Route>
+                <Route path="/*" element={
+                    <>
+                        <Board onStateChangeHistory={handleStateChangeHistory}
+                               onStateChangeActivePlayer={handleStateChangeActivePlayer}/>
+                        <ActionPanel
+                            text={`Ход ${activePlayer === "b" ? "черных" : "белых"}`}
+                            history={history}
+                        />
+                    </>
+                }></Route>
                 <Route path="/tasks/tactics/*" element={(<h1>Тактика</h1>)}></Route>
                 <Route path="/tasks/opening/*" element={(<h1>Дебют</h1>)}></Route>
                 <Route path="/tasks/endgame/*" element={(<h1>Эндшпиль</h1>)}></Route>
