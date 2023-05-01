@@ -8,7 +8,7 @@ export const UsefulMaterials = () => {
   return (
     <div className={styles.text}>
         <Scrollbar
-            style={{ width: 900, height: 600 }}>
+            style={{ width: '86vw', height: '100vh' }}>
               <div>
                     <h2>Доска и начальная позиция</h2>
                     <img src={chess_start_position}  style={{ width: '35%' }} alt="Изображение доски" />

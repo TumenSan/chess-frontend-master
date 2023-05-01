@@ -199,7 +199,8 @@ export const Toolbar = ({ setShowChat }) => {
                   <div onClick={toggleMenuMaterials} className={styles.panel}>Полезные материалы</div>
                   {isOpenMaterials && (
                       <ul>
-                        <li><a href="/usefulmaterials">Полезные материалы</a></li>
+                        <li><a href="/usefulmaterials">Правила игры</a></li>
+                        <li><a href="/usefulmaterials">История</a></li>
                       </ul>
                   )}
                 </div>
