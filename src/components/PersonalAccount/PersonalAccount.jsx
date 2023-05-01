@@ -10,9 +10,10 @@ export const PersonalAccount = ({ onClose }) => {
   const [games, setGames] = useState([]);
 
   useEffect(() => {
-    const login = user;
+    console.log(user);
+    const login = user.user.login;
 
-    const data = { login };
+    const data = { userLogin: login };
 
     setIsLoading(true);
     fetch("http://localhost:5000/api/getgamesuser", {
@@ -46,15 +47,15 @@ export const PersonalAccount = ({ onClose }) => {
   return (
     <div className={styles.signUp}>
       <h3>{`${user.user?.login}`}</h3>
-      <Scrollbar style={{ width: 900, height: 450 }}>
+      <Scrollbar style={{ width: "100%", height: 450 }}>
         <section>
           {isLoading && <Loader />}
           {games?.map((game, i) => (
                   <div className={styles.Games} key={i}>
                       <div className={styles.Game}>
-                          <b>{`${game.playerWhiteLogin} - ${game.playerBlackLogin}`}</b> <br/>
-                          <b>{game.gameResult}</b> <br/>
-                          <b>{game?.date}</b> <br/>
+                          <p>{`${game.playerWhiteLogin} - ${game.playerBlackLogin}`}</p>
+                          <p>{game.gameResult}</p>
+                          <p>{game?.date}</p>
                           <p>{game.pgn}</p>
                           <a href="http://localhost:3000/">Анализ партии</a>
                       </div>
