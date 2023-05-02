@@ -458,14 +458,16 @@ export const Board = ({onStateChangeHistory, onStateChangeActivePlayer}) => {
       setFigures(newFigures);
       setSource(-1);
       setHistory((h) => [...h, historyRecord]);
+      console.log(history);
       onStateChangeHistory(history);
       setActivePlayer((prev) => {
         return prev === "w" ? "b" : "w";
       });
       onStateChangeActivePlayer(activePlayer);
+      console.log("all", history, activePlayer)
     },
     //[activePlayer, figures]
-    [activePlayer, figures, passPawn]
+    [activePlayer, figures, history, onStateChangeActivePlayer, onStateChangeHistory, passPawn]
   );
 
   //обработка клика
@@ -588,7 +590,7 @@ export const Board = ({onStateChangeHistory, onStateChangeActivePlayer}) => {
     return () => {
       socketData.unsubscribe(processMes);
     };
-  }, [socketData, executeMove]);
+  }, [socketData, executeMove, onStateChangeHistory, history, onStateChangeActivePlayer, activePlayer]);
 
   const board = generateBoard(figures, handleClick, currentPlayer);
 

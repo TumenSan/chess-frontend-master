@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Board } from "./components/Board";
 import { UsefulMaterials } from "./components/UsefulMaterials";
 import { WatchGames } from "./components/WatchGames";
@@ -23,6 +23,11 @@ const App = () => {
         setActivePlayer(newState);
         console.log("handleStateChangeActivePlayer", activePlayer)
     }
+
+    useEffect(() => {
+        // обновляем отображаемый текст при изменении пропса text
+        //setDisplayText(text);
+    }, [history]);
 
   return (
     <div className="app">
