@@ -6,7 +6,9 @@ import { Figure } from "../Figure";
 import { CapturedPieces } from "../CapturedPieces";
 import { PawnPromotion } from "../PawnPromotion";
 import { ModalPromotion } from "../ModalPromotion";
-import { ActionPanel } from "../ActionPanel";
+import { runInAction } from "mobx"
+import { observer } from 'mobx-react-lite';
+import GameState from "../../GameState";
 import {
   Pawn,
   King,
@@ -305,7 +307,7 @@ function fmtMSS(s, min = 1000, max = 9999) {
   return `${isAdmin ? `Игрок #${rand} | ` : ""}${(s - (s %= 60)) / 60 + (9 < s ? ":" : ":0") + s}`;
 }
 
-export const Board = () => {
+export const Board = observer(() => {
   const [figures, setFigures] = useState(() => initializeBoard());
   const [activePlayer, setActivePlayer] = useState("w");
   const [source, setSource] = useState(-1);
@@ -460,9 +462,15 @@ export const Board = () => {
       setFigures(newFigures);
       setSource(-1);
       setHistory((h) => [...h, historyRecord]);
+      runInAction(() => {
+        GameState.history = history;
+      })
       setActivePlayer((prev) => {
         return prev === "w" ? "b" : "w";
       });
+      runInAction(() => {
+        GameState.activePlayer = activePlayer;
+      })
     },
     //[activePlayer, figures]
     [activePlayer, figures, passPawn]
@@ -554,10 +562,16 @@ export const Board = () => {
         case SocketEventsEnum.START_GAME:
           setFigures(() => initializeBoard());
           setHistory([]);
+          runInAction(() => {
+            GameState.history = history;
+          })
           socketData.setSocket("STARTED");
           whiteTimeoutPause.current = false;
           setCurrentPlayer(result.side);
           setActivePlayer("w");
+          runInAction(() => {
+            GameState.activePlayer = activePlayer;
+          })
           setSource(-1);
           setCapturedByWhite({});
           setCapturedByBlack({});
@@ -609,10 +623,6 @@ export const Board = () => {
         </div>
         {currentPlayer === "b" ? fmtMSS(blackTime) : fmtMSS(whiteTime)}
       </div>
-      <ActionPanel
-        text={`Ход ${activePlayer === "b" ? "черных" : "белых"}`}
-        history={history}
-      />
       {pawnPromote && (
         <ModalPromotion onClose={setShowPawnPromotion}>
           <PawnPromotion/>
@@ -620,4 +630,4 @@ export const Board = () => {
       )}
     </>
   );
-};
+});

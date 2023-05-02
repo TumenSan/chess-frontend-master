@@ -4,6 +4,8 @@ import { UsefulMaterials } from "./components/UsefulMaterials";
 import { WatchGames } from "./components/WatchGames";
 import { Toolbar } from "./components/Toolbar";
 import { Chat } from "./components/Chat";
+import { ActionPanel } from "./components/ActionPanel";
+import { observable } from 'mobx';
 import {BrowserRouter as Router,
     Route, Routes
 } from 'react-router-dom';
@@ -17,7 +19,10 @@ const App = () => {
       <Toolbar setShowChat={setShowChat} />
         <Router>
             <Routes>
-                <Route path="/*" element={<Board />}></Route>
+                <Route path="/*" element={<>
+                    <Board />
+                    <ActionPanel />
+                </>}></Route>
                 <Route path="/tasks/tactics/*" element={(<h1>Тактика</h1>)}></Route>
                 <Route path="/tasks/opening/*" element={(<h1>Дебют</h1>)}></Route>
                 <Route path="/tasks/endgame/*" element={(<h1>Эндшпиль</h1>)}></Route>

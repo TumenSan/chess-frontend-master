@@ -2,6 +2,8 @@ import { useState, useRef } from "react";
 import { CapturedPieces } from "../CapturedPieces";
 import { Modal } from "../Modal";
 import { Report } from "../Report";
+import { observer } from 'mobx-react-lite';
+import GameState from "../../GameState";
 import styles from "./actionPanel.module.css";
 
 const normalizePosition = (position) => {
@@ -47,9 +49,12 @@ const HistoryItem = ({ item }) => {
   );
 };
 
-export const ActionPanel = ({ history, text }) => {
+export const ActionPanel = observer(() => {
   const [showReport, setShowReport] = useState(false);
   const buttonType = useRef("");
+
+  let history = GameState.history;
+  let text = `Ход ${GameState.activePlayer === "b" ? "черных" : "белых"}`;
 
   const chunkedArray = Array(Math.ceil(history.length / 2))
     .fill()
@@ -161,4 +166,4 @@ export const ActionPanel = ({ history, text }) => {
       )}
     </div>
   );
-};
+});
