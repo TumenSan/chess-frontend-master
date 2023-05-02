@@ -325,6 +325,18 @@ export const Board = observer(() => {
   const [pawnPromote, setShowPawnPromotion] = useState(false);
 
   useEffect(() => {
+    runInAction(() => {
+      GameState.history = history;
+    })
+  }, [history]);
+
+  useEffect(() => {
+    runInAction(() => {
+      GameState.activePlayer = activePlayer;
+    })
+  }, [activePlayer]);
+
+  useEffect(() => {
     const timeoutId = setInterval(() => {
       if (!blackTimeoutPause.current) {
         setBlackTime((t) => t - 1);
@@ -462,15 +474,9 @@ export const Board = observer(() => {
       setFigures(newFigures);
       setSource(-1);
       setHistory((h) => [...h, historyRecord]);
-      runInAction(() => {
-        GameState.history = history;
-      })
       setActivePlayer((prev) => {
         return prev === "w" ? "b" : "w";
       });
-      runInAction(() => {
-        GameState.activePlayer = activePlayer;
-      })
     },
     //[activePlayer, figures]
     [activePlayer, figures, passPawn]
@@ -562,16 +568,10 @@ export const Board = observer(() => {
         case SocketEventsEnum.START_GAME:
           setFigures(() => initializeBoard());
           setHistory([]);
-          runInAction(() => {
-            GameState.history = history;
-          })
           socketData.setSocket("STARTED");
           whiteTimeoutPause.current = false;
           setCurrentPlayer(result.side);
           setActivePlayer("w");
-          runInAction(() => {
-            GameState.activePlayer = activePlayer;
-          })
           setSource(-1);
           setCapturedByWhite({});
           setCapturedByBlack({});
