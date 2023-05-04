@@ -9,6 +9,18 @@
   display: inline-block;
 }
 
+.capturedPieceK {
+  background-image: url("../../assets/wk.png");
+  background-repeat: no-repeat;
+  display: inline-block;
+}
+
+.capturedPiecek {
+  background-image: url("../../assets/bk.png");
+  background-repeat: no-repeat;
+  display: inline-block;
+}
+
 .capturedPiece8P {
   width: 62px;
   height: 15px;

@@ -2,7 +2,8 @@ import { observable } from 'mobx';
 
 const GameState = observable({
     activePlayer: "",
-    history: []
+    history: [],
+    isAnalysis: ""
 });
 
 export default GameState;
