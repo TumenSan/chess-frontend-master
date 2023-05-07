@@ -57,7 +57,7 @@ export const PersonalAccount = ({ onClose }) => {
                           <p>{game.gameResult}</p>
                           <p>{game?.date}</p>
                           <p>{game.pgn}</p>
-                          <a href="http://localhost:3000/">Анализ партии</a>
+                          <a href="http://localhost:3000/watchgames/64393b61ba99683fa3a2cd18">Анализ партии</a>
                       </div>
                   </div>
               ))}

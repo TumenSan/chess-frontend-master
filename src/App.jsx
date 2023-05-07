@@ -6,7 +6,7 @@ import { Toolbar } from "./components/Toolbar";
 import { Chat } from "./components/Chat";
 import { ActionPanel } from "./components/ActionPanel";
 import { observable } from 'mobx';
-import {BrowserRouter as Router,
+import {BrowserRouter,
     Route, Routes
 } from 'react-router-dom';
 import "./App.css";
@@ -17,7 +17,7 @@ const App = () => {
   return (
     <div className="app">
       <Toolbar setShowChat={setShowChat} />
-        <Router>
+        <BrowserRouter>
             <Routes>
                 <Route path="/*" element={<>
                     <Board />
@@ -30,13 +30,13 @@ const App = () => {
                 <Route path="/usefulmaterials/*" element={<UsefulMaterials />}></Route>
                 <Route path="*" element={(<h1>Ошибка</h1>)}></Route>
             </Routes>
-        </Router>
-        <Router>
+        </BrowserRouter>
+        <BrowserRouter>
             <Routes>
                 <Route path="/*" element={<Chat visible={showChat} close={() => setShowChat(false)} />}></Route>
                 <Route path="*" element={(<h1>Ошибка</h1>)}></Route>
             </Routes>
-        </Router>
+        </BrowserRouter>
     </div>
   );
 };
