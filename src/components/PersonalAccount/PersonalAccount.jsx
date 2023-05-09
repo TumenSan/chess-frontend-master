@@ -33,8 +33,6 @@ export const PersonalAccount = ({ onClose }) => {
       .then((payload) => {
         setGames(payload);
         console.log("payload: ", payload);
-        //dispatch({ type: SET_USER_ACTION, payload });
-        //onClose();
       })
       .catch((e) => {
         console.log(e);

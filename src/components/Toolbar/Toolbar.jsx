@@ -13,6 +13,7 @@ import { SocketContext } from "../../contexts/socketContext";
 import { LOGOUT_USER_ACTION } from "../../actions/userActions";
 import { SocketEventsEnum } from "../../connection/constants";
 import { Loader } from "../commons/Loader";
+import whiteKing from "../../assets/wk.png";
 
 export const Toolbar = ({ setShowChat }) => {
   const [showSignUp, setShowSignUp] = useState(false);
@@ -104,6 +105,7 @@ export const Toolbar = ({ setShowChat }) => {
 
   return (
     <div className={styles.toolbar}>
+      <a href="/"> <img src={whiteKing} alt="Logo" style={{width: '50%'}} className={styles.Logo} /> </a>
       {user && (
         <>
           <div
@@ -181,7 +183,7 @@ export const Toolbar = ({ setShowChat }) => {
             )}
             {socketData.status !== "STARTED" && (
                 <div>
-                  <div onClick={toggleMenuTasks} className={styles.panel}>Задачи</div>
+                  <div onClick={toggleMenuTasks} className={`${styles.panelNoUser} ${styles.panelNoUserA}`}>Задачи</div>
                   {isOpenTasks && (
                       <ul>
                         <li><a href="/tasks/tactics">Тактика</a></li>
@@ -192,14 +194,14 @@ export const Toolbar = ({ setShowChat }) => {
                 </div>
             )}
             {socketData.status !== "STARTED" && (
-                <a href="/watchgames">Просмотр партии</a>
+                <a className={`${styles.panelNoUser} ${styles.panelNoUserA}`} style={{color: "white"}} href="/watchgames">Просмотр партии</a>
             )}
             {socketData.status !== "STARTED" && (
                 <div>
-                  <div onClick={toggleMenuMaterials} className={styles.panel}>Полезные материалы</div>
+                  <div onClick={toggleMenuMaterials} className={`${styles.panelNoUser} ${styles.panelNoUserA}`}>Полезные материалы</div>
                   {isOpenMaterials && (
                       <ul>
-                        <li><a href="/usefulmaterials">Правила игры</a></li>
+                        <li><a href="/usefulmaterials">Правила</a></li>
                         <li><a href="/usefulmaterials">История</a></li>
                       </ul>
                   )}
@@ -233,6 +235,29 @@ export const Toolbar = ({ setShowChat }) => {
           >
             Войти
           </button>
+          {socketData.status !== "STARTED" && (
+              <div>
+                <div onClick={toggleMenuTasks} className={`${styles.panelNoUser} ${styles.panelNoUserA}`}>Задачи</div>
+                {isOpenTasks && (
+                    <ul>
+                      <li><a href="/tasks/tactics">Тактика</a></li>
+                      <li><a href="/tasks/opening">Дебют</a></li>
+                      <li><a href="/tasks/endgame">Эндшпиль</a></li>
+                    </ul>
+                )}
+              </div>
+          )}
+          {socketData.status !== "STARTED" && (
+              <div>
+                <div onClick={toggleMenuMaterials} className={`${styles.panelNoUser} ${styles.panelNoUserA}`}>Полезные материалы</div>
+                {isOpenMaterials && (
+                    <ul>
+                      <li><a href="/usefulmaterials">Правила</a></li>
+                      <li><a href="/usefulmaterials">История</a></li>
+                    </ul>
+                )}
+              </div>
+          )}
         </>
       )}
       {showSignUp && (

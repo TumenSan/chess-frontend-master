@@ -9,6 +9,20 @@
   display: inline-block;
 }
 
+.capturedPieceSpecK {
+  background-image: url("../../assets/wk.png");
+  background-repeat: no-repeat;
+  display: inline-block;
+}
+
+.capturedPieceW1K {
+  background-position: 0 0px;
+}
+
+.capturedPieceB1K {
+  background-position: 0 0px;
+}
+
 .capturedPieceK {
   background-image: url("../../assets/wk.png");
   background-repeat: no-repeat;

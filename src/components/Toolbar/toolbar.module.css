@@ -16,7 +16,7 @@
 }
 
 .justContentCenter {
-  margin-top: 100px;
+  margin-top: 50px;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -92,6 +92,25 @@
   align-items: center;
 }
 
+.panelNoUser {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.panelNoUserA {
+  margin-top: 20px;
+  text-decoration: none
+}
+
+.Logo {
+  margin-left: 32px;
+  justify-content: center;
+  align-items: center;
+  /*background-image: url("../../assets/wk.png");*/
+
+}
+
 .outButton {
   position: fixed;
   bottom: 0;
@@ -100,7 +119,11 @@
 
 a {
   margin-top: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
   color: #808080;
   text-decoration: none
+}
+
+ul li {
+  margin-top: 6px;
 }
