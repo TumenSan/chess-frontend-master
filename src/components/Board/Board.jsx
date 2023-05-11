@@ -6,6 +6,7 @@ import { Figure } from "../Figure";
 import { CapturedPieces } from "../CapturedPieces";
 import { PawnPromotion } from "../PawnPromotion";
 import { ModalPromotion } from "../ModalPromotion";
+import { useUser } from "../../contexts/userContext";
 import { runInAction } from "mobx"
 import { observer } from 'mobx-react-lite';
 import GameState from "../../GameState";
@@ -308,6 +309,7 @@ function fmtMSS(s, min = 1000, max = 9999) {
 }
 
 export const Board = observer(() => {
+  const [{ user }, dispatch] = useUser();
   const [figures, setFigures] = useState(() => initializeBoard());
   const [activePlayer, setActivePlayer] = useState("w");
   const [source, setSource] = useState(-1);
@@ -607,6 +609,9 @@ export const Board = observer(() => {
   return (
     <>
       <div className={styles.boardWrapper}>
+        {socketData.status === "STARTED" && (
+            <div className={styles.playerLoginOpponent}>{GameState?.opponent}</div>
+        )}
         {currentPlayer === "b" ? fmtMSS(whiteTime) : fmtMSS(blackTime)}
         <div className={`${currentPlayer === "b" ? styles.blackSide : ""}`}>
           <CapturedPieces
@@ -622,6 +627,9 @@ export const Board = observer(() => {
           />
         </div>
         {currentPlayer === "b" ? fmtMSS(blackTime) : fmtMSS(whiteTime)}
+        {socketData.status === "STARTED" && (
+            <div className={styles.playerLoginMine}>{`${user.user?.login}`}</div>
+        )}
       </div>
       {pawnPromote && (
         <ModalPromotion onClose={setShowPawnPromotion}>

@@ -11,10 +11,12 @@ import { useUser } from "../../contexts/userContext";
 import { SocketContext } from "../../contexts/socketContext";
 import { LOGOUT_USER_ACTION } from "../../actions/userActions";
 import { SocketEventsEnum } from "../../connection/constants";
+import GameState from "../../GameState";
+import { observer } from 'mobx-react-lite';
 import { Loader } from "../commons/Loader";
 import whiteKing from "../../assets/wk.png";
 
-export const Toolbar = ({ setShowChat }) => {
+export const Toolbar = observer(({ setShowChat }) => {
   const [showSignUp, setShowSignUp] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [showReport, setShowReport] = useState(false);
@@ -75,6 +77,7 @@ export const Toolbar = ({ setShowChat }) => {
           break;
         case SocketEventsEnum.START_GAME:
           socketData.opponentStatus = result.opponent;
+          GameState.opponent = result.opponent;
           console.log("oppon: ", result.opponent);
           setOpponent(result.opponent);
           break;
@@ -161,15 +164,14 @@ export const Toolbar = ({ setShowChat }) => {
                 Чат
               </button>
             )}
-            {socketData.status === "STARTED" && (
-              <div
+            {GameStatus === "gameWas" && (
+              <button
                 type="button"
-                className={styles.loginName}
-                onClick={() => setShowChat((show) => !show)}
-                >
-                  {`${opponent}`} <br/>
-                {`${user.user?.login}`}
-              </div>
+                className={`${styles.button} ${styles.login}`}
+                onClick={() => setShowReport((show) => !show)}
+              >
+                Анализ
+              </button>
             )}
             {GameStatus === "gameWas" && (
               <button
@@ -276,4 +278,4 @@ export const Toolbar = ({ setShowChat }) => {
       )}
     </div>
   );
-};
+});

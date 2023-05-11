@@ -21,3 +21,15 @@
 .blackSide {
   transform: rotateX(180deg) rotateY(180deg);
 }
+
+.playerLoginOpponent {
+  position: absolute;
+  top: 10px;
+  left: 20px;
+}
+
+.playerLoginMine {
+  position: absolute;
+  bottom: 10px;
+  left: 20px;
+}

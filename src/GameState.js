@@ -4,7 +4,8 @@ const GameState = observable({
     activePlayer: "",
     history: [],
     isAnalysis: "",
-    tasksHistory: []
+    tasksHistory: [],
+    opponent: ""
 });
 
 export default GameState;
