@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Board } from "./components/Board";
+import { BoardTasks } from "./components/BoardTasks";
 import { UsefulMaterials } from "./components/UsefulMaterials";
 import { WatchGames } from "./components/WatchGames";
 import { Toolbar } from "./components/Toolbar";
@@ -23,9 +24,18 @@ const App = () => {
                     <Board />
                     <ActionPanel />
                 </>}></Route>
-                <Route path="/tasks/tactics/*" element={(<h1>Тактика</h1>)}></Route>
-                <Route path="/tasks/opening/*" element={(<h1>Дебют</h1>)}></Route>
-                <Route path="/tasks/endgame/*" element={(<h1>Эндшпиль</h1>)}></Route>
+                <Route path="/tasks/tactics/*" element={<>
+                    <BoardTasks />
+                    <h1>Тактика</h1>
+                </>}></Route>
+                <Route path="/tasks/opening/*" element={<>
+                    <BoardTasks />
+                    <h1>Дебют</h1>
+                </>}></Route>
+                <Route path="/tasks/endgame/*" element={<>
+                    <BoardTasks />
+                    <h1>Эндшпиль</h1>
+                </>}></Route>
                 <Route path="/watchgames/*" element={<WatchGames/>}></Route>
                 <Route path="/usefulmaterials/*" element={<UsefulMaterials />}></Route>
                 <Route path="*" element={(<h1>Ошибка</h1>)}></Route>
