@@ -308,7 +308,7 @@ const resetHighlight = (figures) => {
 };
 
 export const BoardTasks = observer(() => {
-  const [figures, setFigures] = useState(() => initializeBoardFen("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"));
+  const [figures, setFigures] = useState(() => initializeBoardFen("r1bq1rk1/ppp1bpp1/2np1n1p/4p3/2B1P3/2PP1N2/PP3PPP/RNBQR1K1 w - - 0 8"));
   const [activePlayer, setActivePlayer] = useState("w");
   const [source, setSource] = useState(-1);
   const [capturedByWhite, setCapturedByWhite] = useState({});
@@ -541,7 +541,7 @@ export const BoardTasks = observer(() => {
     const processMes = (result) => {
       switch (result.type) {
         case SocketEventsEnum.START_GAME:
-          setFigures(() => initializeBoardFen("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"));
+          setFigures(() => initializeBoardFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"));
           setHistory([]);
           socketData.setSocket("STARTED");
           whiteTimeoutPause.current = false;
@@ -581,6 +581,7 @@ export const BoardTasks = observer(() => {
     <>
       <div className={styles.boardWrapper}>
         <div className={`${currentPlayer === "b" ? styles.blackSide : ""}`}>
+          Задача №3
           <CapturedPieces
             invert={currentPlayer === "b"}
             capturedPieces={capturedByBlack}

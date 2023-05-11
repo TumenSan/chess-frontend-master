@@ -1,6 +1,6 @@
-import { Board } from "../Board";
+import { BoardTasks } from "../BoardTasks";
 import { Toolbar } from "../Toolbar";
-import { ActionPanel } from "../ActionPanel";
+import { ActionPanelTasks } from "../ActionPanelTasks/ActionPanelTasks";
 import { AnalysisPanel } from "../AnalysisPanel";
 import { observer } from 'mobx-react-lite';
 import "./App.css";
@@ -12,8 +12,8 @@ export const WatchGames = observer(() => {
   return (
     <div className="app">
         <Toolbar />
-        <Board />
-        <ActionPanel />
+        <BoardTasks />
+        <ActionPanelTasks />
         <Routes>
             <Route
                 path="/"

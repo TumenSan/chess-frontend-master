@@ -6,6 +6,7 @@ import { WatchGames } from "./components/WatchGames";
 import { Toolbar } from "./components/Toolbar";
 import { Chat } from "./components/Chat";
 import { ActionPanel } from "./components/ActionPanel";
+import { ActionPanelTasks } from "./components/ActionPanelTasks";
 import { observable } from 'mobx';
 import {BrowserRouter,
     Route, Routes
@@ -26,14 +27,17 @@ const App = () => {
                 </>}></Route>
                 <Route path="/tasks/tactics/*" element={<>
                     <BoardTasks />
+                    <ActionPanelTasks />
                     <h1>Тактика</h1>
                 </>}></Route>
                 <Route path="/tasks/opening/*" element={<>
                     <BoardTasks />
+                    <ActionPanelTasks />
                     <h1>Дебют</h1>
                 </>}></Route>
                 <Route path="/tasks/endgame/*" element={<>
                     <BoardTasks />
+                    <ActionPanelTasks />
                     <h1>Эндшпиль</h1>
                 </>}></Route>
                 <Route path="/watchgames/*" element={<WatchGames/>}></Route>
