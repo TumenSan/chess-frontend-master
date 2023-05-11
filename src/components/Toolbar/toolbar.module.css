@@ -8,6 +8,7 @@
 }
 
 .loginName {
+  cursor: pointer;
   font-size: 14px;
   font-weight: 600;
   line-height: 28px;
@@ -93,6 +94,7 @@
 }
 
 .panelNoUser {
+  cursor: pointer;
   text-align: center;
   justify-content: center;
   align-items: center;

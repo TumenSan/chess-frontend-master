@@ -16,8 +16,8 @@ const App = () => {
 
   return (
     <div className="app">
-      <Toolbar setShowChat={setShowChat} />
-        <BrowserRouter>
+      <BrowserRouter>
+        <Toolbar setShowChat={setShowChat} />
             <Routes>
                 <Route path="/*" element={<>
                     <Board />

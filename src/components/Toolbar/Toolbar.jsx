@@ -1,6 +1,5 @@
 import { useContext, useState, useEffect } from "react";
-import {Route, Routes, Link, redirect
-} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Modal } from "../Modal";
 import { ModalPlayer } from '../ModalPlayer';
 import { SignUp } from "../SignUp";
@@ -186,23 +185,23 @@ export const Toolbar = ({ setShowChat }) => {
                   <div onClick={toggleMenuTasks} className={`${styles.panelNoUser} ${styles.panelNoUserA}`}>Задачи</div>
                   {isOpenTasks && (
                       <ul>
-                        <li><a href="/tasks/tactics">Тактика</a></li>
-                        <li><a href="/tasks/opening">Дебют</a></li>
-                        <li><a href="/tasks/endgame">Эндшпиль</a></li>
+                        <li><Link to={"/tasks/tactics"}>Тактика</Link></li>
+                        <li><Link to={"/tasks/opening"}>Дебют</Link></li>
+                        <li><Link to={"/tasks/endgame"}>Эндшпиль</Link></li>
                       </ul>
                   )}
                 </div>
             )}
             {socketData.status !== "STARTED" && (
-                <a className={`${styles.panelNoUser} ${styles.panelNoUserA}`} style={{color: "white"}} href="/watchgames">Просмотр партии</a>
+                <Link className={`${styles.panelNoUser} ${styles.panelNoUserA}`} style={{color: "white"}} to={"/watchgames"}>Просмотр партии</Link>
             )}
             {socketData.status !== "STARTED" && (
                 <div>
                   <div onClick={toggleMenuMaterials} className={`${styles.panelNoUser} ${styles.panelNoUserA}`}>Полезные материалы</div>
                   {isOpenMaterials && (
                       <ul>
-                        <li><a href="/usefulmaterials">Правила</a></li>
-                        <li><a href="/usefulmaterials">История</a></li>
+                        <li><Link to={"/usefulmaterials"}>Правила</Link></li>
+                        <li><Link to={"/usefulmaterials"}>История</Link></li>
                       </ul>
                   )}
                 </div>
@@ -240,9 +239,9 @@ export const Toolbar = ({ setShowChat }) => {
                 <div onClick={toggleMenuTasks} className={`${styles.panelNoUser} ${styles.panelNoUserA}`}>Задачи</div>
                 {isOpenTasks && (
                     <ul>
-                      <li><a href="/tasks/tactics">Тактика</a></li>
-                      <li><a href="/tasks/opening">Дебют</a></li>
-                      <li><a href="/tasks/endgame">Эндшпиль</a></li>
+                      <li><Link to={"/tasks/tactics"}>Тактика</Link></li>
+                      <li><Link to={"/tasks/opening"}>Дебют</Link></li>
+                      <li><Link to={"/tasks/endgame"}>Эндшпиль</Link></li>
                     </ul>
                 )}
               </div>
@@ -252,8 +251,8 @@ export const Toolbar = ({ setShowChat }) => {
                 <div onClick={toggleMenuMaterials} className={`${styles.panelNoUser} ${styles.panelNoUserA}`}>Полезные материалы</div>
                 {isOpenMaterials && (
                     <ul>
-                      <li><a href="/usefulmaterials">Правила</a></li>
-                      <li><a href="/usefulmaterials">История</a></li>
+                      <li><Link to={"/usefulmaterials"}>Правила</Link></li>
+                      <li><Link to={"/usefulmaterials"}>История</Link></li>
                     </ul>
                 )}
               </div>

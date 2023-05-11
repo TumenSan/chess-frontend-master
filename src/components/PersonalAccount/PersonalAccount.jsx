@@ -3,6 +3,7 @@ import { useUser } from "../../contexts/userContext";
 import styles from "./account.module.css";
 import { Loader } from "../commons/Loader";
 import { Scrollbar } from "react-scrollbars-custom";
+import { Link } from "react-router-dom";
 
 export const PersonalAccount = ({ onClose }) => {
   const [{ user }] = useUser();
@@ -55,7 +56,7 @@ export const PersonalAccount = ({ onClose }) => {
                           <p>{game.gameResult}</p>
                           <p>{game?.date}</p>
                           <p>{game.pgn}</p>
-                          <a href="http://localhost:3000/watchgames/64393b61ba99683fa3a2cd18">Анализ партии</a>
+                        <Link to={`/watchgames/${game._id}`}>Анализ партии</Link>
                       </div>
                   </div>
               ))}
