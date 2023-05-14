@@ -1,0 +1,1 @@
+export { BoardWatchGame } from './BoardWatchGame';

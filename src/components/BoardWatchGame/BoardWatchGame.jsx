@@ -307,7 +307,7 @@ const resetHighlight = (figures) => {
   return figures;
 };
 
-export const BoardTasks = observer(() => {
+export const BoardWatchGame = observer(() => {
   const [figures, setFigures] = useState(() => initializeBoardFen("r3k2r/pp3ppp/5n2/4p3/1b1qP3/5P2/PP1B2PP/RN1QK2R w KQkq - 0 14"));
   //r1bq1rk1/ppp1bpp1/2np1n1p/4p3/2B1P3/2PP1N2/PP3PPP/RNBQR1K1 w - - 0 8
   const [activePlayer, setActivePlayer] = useState("w");
@@ -582,7 +582,7 @@ export const BoardTasks = observer(() => {
     <>
       <div className={styles.boardWrapper}>
         <div className={`${currentPlayer === "b" ? styles.blackSide : ""}`}>
-          Задача №3
+          Анализ партии
           <CapturedPieces
             invert={currentPlayer === "b"}
             capturedPieces={capturedByBlack}

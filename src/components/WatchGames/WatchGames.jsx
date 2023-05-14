@@ -1,19 +1,18 @@
-import { BoardTasks } from "../BoardTasks";
+import { BoardWatchGame } from "../BoardWatchGame";
 import { Toolbar } from "../Toolbar";
-import { ActionPanelTasks } from "../ActionPanelTasks/ActionPanelTasks";
+import { ActionPanelWatchGame } from "../ActionPanelWatchGame";
 import { AnalysisPanel } from "../AnalysisPanel";
 import { observer } from 'mobx-react-lite';
 import "./App.css";
 import { Route, Routes } from 'react-router-dom';
-import GameState from "../../GameState";
 
 export const WatchGames = observer(() => {
 
   return (
     <div className="app">
         <Toolbar />
-        <BoardTasks />
-        <ActionPanelTasks />
+        <BoardWatchGame />
+        <ActionPanelWatchGame />
         <Routes>
             <Route
                 path="/"

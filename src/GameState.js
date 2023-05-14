@@ -5,7 +5,8 @@ const GameState = observable({
     history: [],
     isAnalysis: "",
     tasksHistory: [],
-    opponent: ""
+    opponent: "",
+    fenArray: []
 });
 
 export default GameState;

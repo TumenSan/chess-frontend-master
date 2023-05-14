@@ -7,7 +7,6 @@ import { Toolbar } from "./components/Toolbar";
 import { Chat } from "./components/Chat";
 import { ActionPanel } from "./components/ActionPanel";
 import { ActionPanelTasks } from "./components/ActionPanelTasks";
-import { observable } from 'mobx';
 import {BrowserRouter,
     Route, Routes
 } from 'react-router-dom';
