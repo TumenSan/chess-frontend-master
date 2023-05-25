@@ -149,11 +149,11 @@ export const ActionPanel = observer(() => {
                 type="button"
                 className={`${styles.button} ${styles.ban}`}
                 onClick={() => {
-                  buttonType.current = "Выдать бан";
+                  buttonType.current = "Заблокировать игрока";
                   setShowReport(true);
                 }}
               >
-                Бан
+                Блокировка
               </button>
             </div>
           </>

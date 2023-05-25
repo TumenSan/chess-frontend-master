@@ -308,8 +308,10 @@ const resetHighlight = (figures) => {
 };
 
 export const BoardWatchGame = observer(() => {
-  const [figures, setFigures] = useState(() => initializeBoardFen("r3k2r/pp3ppp/5n2/4p3/1b1qP3/5P2/PP1B2PP/RN1QK2R w KQkq - 0 14"));
+  const [figures, setFigures] = useState(() => initializeBoardFen("r1bq1rk1/ppp2ppp/2np1n2/2b1p1B1/2B1P3/2PP1N2/PP3PPP/RN1Q1RK1 b - - 1 7"));
   //r1bq1rk1/ppp1bpp1/2np1n1p/4p3/2B1P3/2PP1N2/PP3PPP/RNBQR1K1 w - - 0 8
+  //r1bq1rk1/ppp2ppp/2np1n2/2b1p1B1/2B1P3/2PP1N2/PP3PPP/RN1Q1RK1 b - - 1 7
+  //r3k2r/pp3ppp/5n2/4p3/1b1qP3/5P2/PP1B2PP/RN1QK2R w KQkq - 0 14
   const [activePlayer, setActivePlayer] = useState("w");
   const [source, setSource] = useState(-1);
   const [capturedByWhite, setCapturedByWhite] = useState({});
